@@ -1,62 +1,52 @@
-import Database from 'better-sqlite3';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
+import mongoose from 'mongoose';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = path.join(__dirname, '..', 'data');
+// ── Connection ────────────────────────────────────────────────────────────────
 
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+export async function connectDB() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.error('❌ MONGODB_URI is not set. Please add it as a Replit secret.');
+    process.exit(1);
+  }
+  await mongoose.connect(uri);
+  console.log('✅ MongoDB connected');
 }
 
-const db = new Database(path.join(DATA_DIR, 'academy.db'));
+// ── Schemas & Models ──────────────────────────────────────────────────────────
 
-// Enable WAL mode for better performance
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
+const userSchema = new mongoose.Schema({
+  username:     { type: String, required: true, unique: true, trim: true },
+  email:        { type: String, required: true, unique: true, lowercase: true, trim: true },
+  passwordHash: { type: String, required: true },
+  skillLevel:   { type: String, default: 'beginner' },
+}, { timestamps: true });
 
-// Create tables
-db.exec(`
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
-    skill_level TEXT DEFAULT 'beginner',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  );
+const messageSchema = new mongoose.Schema({
+  userId:   { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  lessonId: { type: String, required: true },
+  role:     { type: String, enum: ['user', 'assistant', 'system'], required: true },
+  content:  { type: String, required: true },
+}, { timestamps: true });
+messageSchema.index({ userId: 1, lessonId: 1, createdAt: 1 });
 
-  CREATE TABLE IF NOT EXISTS messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    lesson_id TEXT NOT NULL,
-    role TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system')),
-    content TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-  );
+const lessonProgressSchema = new mongoose.Schema({
+  userId:      { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  lessonId:    { type: String, required: true },
+  status:      { type: String, enum: ['not_started', 'in_progress', 'completed'], default: 'not_started' },
+  startedAt:   { type: Date },
+  completedAt: { type: Date },
+}, { timestamps: true });
+lessonProgressSchema.index({ userId: 1, lessonId: 1 }, { unique: true });
 
-  CREATE TABLE IF NOT EXISTS lesson_progress (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    lesson_id TEXT NOT NULL,
-    status TEXT DEFAULT 'not_started' CHECK(status IN ('not_started', 'in_progress', 'completed')),
-    started_at DATETIME,
-    completed_at DATETIME,
-    UNIQUE(user_id, lesson_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-  );
+const quizResultSchema = new mongoose.Schema({
+  userId:   { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  lessonId: { type: String, required: true },
+  question: { type: String, required: true },
+  correct:  { type: Boolean, required: true },
+}, { timestamps: true });
+quizResultSchema.index({ userId: 1, lessonId: 1 });
 
-  CREATE TABLE IF NOT EXISTS quiz_results (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    lesson_id TEXT NOT NULL,
-    question TEXT NOT NULL,
-    correct INTEGER NOT NULL DEFAULT 0,
-    answered_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-  );
-`);
-
-export default db;
+export const User           = mongoose.model('User',           userSchema);
+export const Message        = mongoose.model('Message',        messageSchema);
+export const LessonProgress = mongoose.model('LessonProgress', lessonProgressSchema);
+export const QuizResult     = mongoose.model('QuizResult',     quizResultSchema);

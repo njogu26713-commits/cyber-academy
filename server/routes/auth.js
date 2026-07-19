@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import db from '../db.js';
+import { User } from '../db.js';
 
 const router = express.Router();
 
@@ -12,16 +12,15 @@ router.post('/register', async (req, res) => {
     return res.status(400).json({ error: 'Password must be at least 6 characters.' });
 
   try {
-    const hash = await bcrypt.hash(password, 10);
-    const stmt = db.prepare('INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)');
-    const result = stmt.run(username.trim(), email.trim().toLowerCase(), hash);
-    const user = db.prepare('SELECT id, username, email, skill_level FROM users WHERE id = ?').get(result.lastInsertRowid);
-    req.session.userId = user.id;
-    res.json({ user });
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = await User.create({ username: username.trim(), email, passwordHash });
+    req.session.userId = user._id.toString();
+    res.json({ user: { id: user._id, username: user.username, email: user.email, skill_level: user.skillLevel } });
   } catch (err) {
-    if (err.message.includes('UNIQUE')) {
+    if (err.code === 11000) {
       return res.status(400).json({ error: 'Username or email already taken.' });
     }
+    console.error('Register error:', err);
     res.status(500).json({ error: 'Registration failed.' });
   }
 });
@@ -31,25 +30,25 @@ router.post('/login', async (req, res) => {
   if (!email || !password)
     return res.status(400).json({ error: 'Email and password are required.' });
 
-  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email.trim().toLowerCase());
+  const user = await User.findOne({ email: email.trim().toLowerCase() });
   if (!user) return res.status(401).json({ error: 'Invalid email or password.' });
 
-  const valid = await bcrypt.compare(password, user.password_hash);
+  const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) return res.status(401).json({ error: 'Invalid email or password.' });
 
-  req.session.userId = user.id;
-  res.json({ user: { id: user.id, username: user.username, email: user.email, skill_level: user.skill_level } });
+  req.session.userId = user._id.toString();
+  res.json({ user: { id: user._id, username: user.username, email: user.email, skill_level: user.skillLevel } });
 });
 
 router.post('/logout', (req, res) => {
   req.session.destroy(() => res.json({ ok: true }));
 });
 
-router.get('/me', (req, res) => {
+router.get('/me', async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: 'Not authenticated.' });
-  const user = db.prepare('SELECT id, username, email, skill_level FROM users WHERE id = ?').get(req.session.userId);
+  const user = await User.findById(req.session.userId).select('username email skillLevel');
   if (!user) return res.status(401).json({ error: 'User not found.' });
-  res.json({ user });
+  res.json({ user: { id: user._id, username: user.username, email: user.email, skill_level: user.skillLevel } });
 });
 
 export default router;

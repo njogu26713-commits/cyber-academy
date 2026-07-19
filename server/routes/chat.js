@@ -1,6 +1,6 @@
 import express from 'express';
 import OpenAI from 'openai';
-import db from '../db.js';
+import { User, Message, LessonProgress } from '../db.js';
 import { getLessonById } from '../curriculum.js';
 
 const router = express.Router();
@@ -57,13 +57,13 @@ The "correct" field is the 0-based index of the correct option. Only embed ONE q
 }
 
 // Get chat history for a lesson
-router.get('/history/:lessonId', requireAuth, (req, res) => {
+router.get('/history/:lessonId', requireAuth, async (req, res) => {
   const { lessonId } = req.params;
-  const messages = db.prepare(
-    `SELECT role, content, created_at FROM messages
-     WHERE user_id = ? AND lesson_id = ? AND role != 'system'
-     ORDER BY created_at ASC`
-  ).all(req.session.userId, lessonId);
+  const messages = await Message.find({
+    userId: req.session.userId,
+    lessonId,
+    role: { $ne: 'system' },
+  }).sort({ createdAt: 1 }).select('role content createdAt');
   res.json({ messages });
 });
 
@@ -83,29 +83,25 @@ router.post('/message', requireAuth, async (req, res) => {
   const lesson = getLessonById(lessonId);
   if (!lesson) return res.status(404).json({ error: 'Lesson not found.' });
 
-  const user = db.prepare('SELECT id, username, skill_level FROM users WHERE id = ?').get(req.session.userId);
+  const user = await User.findById(req.session.userId).select('username skillLevel');
 
   // Save user message
-  db.prepare('INSERT INTO messages (user_id, lesson_id, role, content) VALUES (?, ?, ?, ?)')
-    .run(req.session.userId, lessonId, 'user', content.trim());
+  await Message.create({ userId: req.session.userId, lessonId, role: 'user', content: content.trim() });
 
-  // Mark lesson as in_progress if not already
-  const existing = db.prepare('SELECT status FROM lesson_progress WHERE user_id = ? AND lesson_id = ?')
-    .get(req.session.userId, lessonId);
-  if (!existing) {
-    db.prepare('INSERT INTO lesson_progress (user_id, lesson_id, status, started_at) VALUES (?, ?, ?, ?)')
-      .run(req.session.userId, lessonId, 'in_progress', new Date().toISOString());
-  }
+  // Mark lesson as in_progress if not already started
+  await LessonProgress.findOneAndUpdate(
+    { userId: req.session.userId, lessonId },
+    { $setOnInsert: { status: 'in_progress', startedAt: new Date() } },
+    { upsert: true, new: true }
+  );
 
-  // Build conversation history
-  const history = db.prepare(
-    `SELECT role, content FROM messages
-     WHERE user_id = ? AND lesson_id = ?
-     ORDER BY created_at ASC
-     LIMIT 40`
-  ).all(req.session.userId, lessonId);
+  // Build conversation history (last 40 messages)
+  const history = await Message.find({ userId: req.session.userId, lessonId })
+    .sort({ createdAt: 1 })
+    .limit(40)
+    .select('role content');
 
-  const systemPrompt = buildSystemPrompt(lesson, user, user.skill_level);
+  const systemPrompt = buildSystemPrompt(lesson, user, user.skillLevel);
   const messages = [
     { role: 'system', content: systemPrompt },
     ...history.map(m => ({ role: m.role, content: m.content })),
@@ -122,8 +118,7 @@ router.post('/message', requireAuth, async (req, res) => {
     const reply = completion.choices[0].message.content;
 
     // Save assistant response
-    db.prepare('INSERT INTO messages (user_id, lesson_id, role, content) VALUES (?, ?, ?, ?)')
-      .run(req.session.userId, lessonId, 'assistant', reply);
+    await Message.create({ userId: req.session.userId, lessonId, role: 'assistant', content: reply });
 
     res.json({ reply });
   } catch (err) {
@@ -139,25 +134,26 @@ router.post('/start', requireAuth, async (req, res) => {
 
   const openai = getOpenAI();
   if (!openai) {
-    return res.status(503).json({
-      error: 'Groq API key not configured.',
-    });
+    return res.status(503).json({ error: 'Groq API key not configured.' });
   }
 
   const lesson = getLessonById(lessonId);
   if (!lesson) return res.status(404).json({ error: 'Lesson not found.' });
 
-  const user = db.prepare('SELECT id, username, skill_level FROM users WHERE id = ?').get(req.session.userId);
+  const user = await User.findById(req.session.userId).select('username skillLevel');
 
   // Check if we already have messages for this lesson
-  const existing = db.prepare('SELECT COUNT(*) as count FROM messages WHERE user_id = ? AND lesson_id = ? AND role != ?')
-    .get(req.session.userId, lessonId, 'system');
+  const existingCount = await Message.countDocuments({
+    userId: req.session.userId,
+    lessonId,
+    role: { $ne: 'system' },
+  });
 
-  if (existing.count > 0) {
+  if (existingCount > 0) {
     return res.json({ alreadyStarted: true });
   }
 
-  const systemPrompt = buildSystemPrompt(lesson, user, user.skill_level);
+  const systemPrompt = buildSystemPrompt(lesson, user, user.skillLevel);
   const openingPrompt = `Introduce yourself briefly and begin teaching "${lesson.title}" to ${user.username}. Start with an engaging hook or question to get them thinking. Keep it concise and welcoming.`;
 
   try {
@@ -173,14 +169,13 @@ router.post('/start', requireAuth, async (req, res) => {
 
     const reply = completion.choices[0].message.content;
 
-    db.prepare('INSERT INTO messages (user_id, lesson_id, role, content) VALUES (?, ?, ?, ?)')
-      .run(req.session.userId, lessonId, 'assistant', reply);
+    await Message.create({ userId: req.session.userId, lessonId, role: 'assistant', content: reply });
 
-    db.prepare(
-      `INSERT INTO lesson_progress (user_id, lesson_id, status, started_at)
-       VALUES (?, ?, 'in_progress', ?)
-       ON CONFLICT(user_id, lesson_id) DO UPDATE SET status = 'in_progress', started_at = COALESCE(started_at, excluded.started_at)`
-    ).run(req.session.userId, lessonId, new Date().toISOString());
+    await LessonProgress.findOneAndUpdate(
+      { userId: req.session.userId, lessonId },
+      { $set: { status: 'in_progress' }, $setOnInsert: { startedAt: new Date() } },
+      { upsert: true }
+    );
 
     res.json({ reply });
   } catch (err) {

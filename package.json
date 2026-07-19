@@ -12,10 +12,12 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^9.6.0",
+    "connect-mongo": "^6.0.0",
     "connect-sqlite3": "^0.9.17",
     "cors": "^2.8.6",
     "express": "^4.22.2",
     "express-session": "^1.19.0",
+    "mongoose": "^9.7.4",
     "openai": "^4.104.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
