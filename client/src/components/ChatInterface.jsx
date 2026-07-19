@@ -65,7 +65,7 @@ function Message({ msg }) {
         </div>
       )}
 
-      <div style={{ maxWidth: '80%', minWidth: '60px' }}>
+      <div style={{ maxWidth: '85%', minWidth: '60px' }}>
         {!isUser && (
           <div style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 600, marginBottom: '0.3rem', letterSpacing: '0.03em' }}>
             KAI · AI Instructor
@@ -79,6 +79,7 @@ function Message({ msg }) {
           padding: '0.75rem 1rem',
           color: isUser ? '#fff' : 'var(--text)',
           fontSize: '0.92rem', lineHeight: 1.65,
+          wordBreak: 'break-word',
         }}>
           {isUser ? (
             <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{msg.content}</p>
@@ -207,6 +208,9 @@ export default function ChatInterface({ lesson, module: mod }) {
       <p style={{ maxWidth: '380px', lineHeight: 1.7, marginBottom: '1.5rem' }}>
         Select a lesson from the curriculum to start learning with Kai, your AI cybersecurity instructor.
       </p>
+      <p className="mobile-hint" style={{ display: 'none', fontSize: '0.85rem', color: 'var(--primary)', marginBottom: '1.5rem' }}>
+        Tap <strong>☰</strong> in the top-left to browse lessons
+      </p>
       <div style={{
         background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px',
         padding: '1.2rem 1.5rem', maxWidth: '360px',
@@ -215,16 +219,20 @@ export default function ChatInterface({ lesson, module: mod }) {
           💡 <strong style={{ color: 'var(--text)' }}>Tip:</strong> Kai will introduce each topic, ask you questions to check understanding, and quiz you at the end. Just have a conversation!
         </p>
       </div>
+      <style>{`@media (max-width: 768px) { .mobile-hint { display: block !important; } }`}</style>
     </div>
   );
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
       {/* Lesson header */}
-      <div style={{
-        padding: '0.9rem 1.5rem', borderBottom: '1px solid var(--border)',
-        background: 'var(--surface)', display: 'flex', alignItems: 'center', gap: '0.8rem',
-      }}>
+      <div
+        className="chat-header"
+        style={{
+          padding: '0.9rem 1.5rem', borderBottom: '1px solid var(--border)',
+          background: 'var(--surface)', display: 'flex', alignItems: 'center', gap: '0.8rem',
+        }}
+      >
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.1rem' }}>
             {mod?.icon} {mod?.title}
@@ -244,7 +252,7 @@ export default function ChatInterface({ lesson, module: mod }) {
       </div>
 
       {/* Messages */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem' }} className="chat-messages">
         {starting && (
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', marginBottom: '1rem' }}>
             <div style={{
@@ -326,7 +334,7 @@ export default function ChatInterface({ lesson, module: mod }) {
 
       {/* Input */}
       <div style={{
-        padding: '1rem 1.5rem', borderTop: '1px solid var(--border)', background: 'var(--surface)',
+        padding: '0.75rem 1rem', borderTop: '1px solid var(--border)', background: 'var(--surface)',
       }}>
         <div style={{
           display: 'flex', gap: '0.75rem', alignItems: 'flex-end',
@@ -346,7 +354,7 @@ export default function ChatInterface({ lesson, module: mod }) {
             rows={1}
             style={{
               flex: 1, background: 'none', border: 'none', outline: 'none',
-              color: 'var(--text)', fontFamily: 'var(--sans)', fontSize: '0.92rem',
+              color: 'var(--text)', fontFamily: 'var(--sans)', fontSize: '1rem',
               resize: 'none', lineHeight: 1.5, padding: 0, maxHeight: '120px',
               overflowY: 'auto',
             }}
@@ -369,10 +377,18 @@ export default function ChatInterface({ lesson, module: mod }) {
             ↑
           </button>
         </div>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.4rem', textAlign: 'center' }}>
+        <div className="chat-input-hint" style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.4rem', textAlign: 'center' }}>
           Press Enter to send · Shift+Enter for new line · Kai remembers your conversation
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .chat-header { padding-left: 3.5rem !important; }
+          .chat-messages { padding: 1rem !important; }
+          .chat-input-hint { display: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

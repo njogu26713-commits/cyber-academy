@@ -28,24 +28,29 @@ export default function Landing({ onGetStarted }) {
       {/* Nav */}
       <nav style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '1.2rem 2rem', borderBottom: '1px solid var(--border)',
+        padding: '1rem 1.2rem', borderBottom: '1px solid var(--border)',
         position: 'sticky', top: 0, background: 'rgba(5,10,20,0.95)',
-        backdropFilter: 'blur(10px)', zIndex: 100,
+        backdropFilter: 'blur(10px)', zIndex: 100, gap: '0.75rem',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <span style={{ fontSize: '1.5rem' }}>🔥</span>
-          <span style={{ fontWeight: 700, fontSize: '1.1rem', letterSpacing: '-0.02em' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', minWidth: 0 }}>
+          <span style={{ fontSize: '1.5rem', flexShrink: 0 }}>🔥</span>
+          <span style={{ fontWeight: 700, fontSize: '1rem', letterSpacing: '-0.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             Firebox <span style={{ color: 'var(--primary)' }}>Cyber Academy</span>
           </span>
         </div>
-        <button className="btn btn-primary" onClick={onGetStarted}>Get Started Free</button>
+        <button className="btn btn-primary" onClick={onGetStarted} style={{ flexShrink: 0, whiteSpace: 'nowrap', fontSize: '0.88rem' }}>
+          Get Started Free
+        </button>
       </nav>
 
       {/* Hero */}
-      <section style={{
-        textAlign: 'center', padding: '6rem 2rem 5rem',
-        background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(249,115,22,0.12), transparent)',
-      }}>
+      <section
+        className="landing-hero"
+        style={{
+          textAlign: 'center', padding: '4rem 1.5rem 3.5rem',
+          background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(249,115,22,0.12), transparent)',
+        }}
+      >
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
           background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.3)',
@@ -56,7 +61,7 @@ export default function Landing({ onGetStarted }) {
         </div>
 
         <h1 style={{
-          fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: 800,
+          fontSize: 'clamp(1.9rem, 5vw, 3.8rem)', fontWeight: 800,
           lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: '1.2rem',
           maxWidth: '800px', margin: '0 auto 1.2rem',
         }}>
@@ -68,23 +73,23 @@ export default function Landing({ onGetStarted }) {
         </h1>
 
         <p style={{
-          fontSize: '1.15rem', color: 'var(--text-dim)', maxWidth: '560px',
-          margin: '0 auto 2.5rem', lineHeight: 1.7,
+          fontSize: '1.05rem', color: 'var(--text-dim)', maxWidth: '560px',
+          margin: '0 auto 2rem', lineHeight: 1.7,
         }}>
           Learn cybersecurity through interactive AI conversations. Kai, your 24/7 AI tutor, 
           teaches, quizzes, and guides you from complete beginner to advanced practitioner.
         </p>
 
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button className="btn btn-primary" onClick={onGetStarted} style={{ fontSize: '1rem', padding: '0.75rem 2rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button className="btn btn-primary" onClick={onGetStarted} style={{ fontSize: '1rem', padding: '0.75rem 1.75rem' }}>
             🔥 Start Learning Free
           </button>
-          <button className="btn btn-ghost" onClick={onGetStarted} style={{ fontSize: '1rem', padding: '0.75rem 2rem' }}>
+          <button className="btn btn-ghost" onClick={onGetStarted} style={{ fontSize: '1rem', padding: '0.75rem 1.75rem' }}>
             View Curriculum ↓
           </button>
         </div>
 
-        <div style={{ marginTop: '3rem', display: 'flex', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           {[['8', 'Modules'], ['32+', 'Lessons'], ['24/7', 'AI Tutor'], ['∞', 'Practice']].map(([n, l]) => (
             <div key={l} style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--primary)' }}>{n}</div>
@@ -95,14 +100,14 @@ export default function Landing({ onGetStarted }) {
       </section>
 
       {/* Features */}
-      <section style={{ padding: '4rem 2rem', maxWidth: '1100px', margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '1.8rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+      <section style={{ padding: '3.5rem 1.5rem', maxWidth: '1100px', margin: '0 auto' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', fontWeight: 700, marginBottom: '0.5rem' }}>
           Why Firebox?
         </h2>
-        <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '3rem' }}>
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2.5rem' }}>
           Traditional courses are passive. Firebox is a conversation.
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: '1.2rem' }}>
           {features.map(f => (
             <div key={f.title} style={{
               background: 'var(--card)', border: '1px solid var(--border)',
@@ -121,15 +126,15 @@ export default function Landing({ onGetStarted }) {
       </section>
 
       {/* Curriculum */}
-      <section style={{ padding: '4rem 2rem', maxWidth: '900px', margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '1.8rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+      <section style={{ padding: '3.5rem 1.5rem', maxWidth: '900px', margin: '0 auto' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', fontWeight: 700, marginBottom: '0.5rem' }}>
           Full Curriculum
         </h2>
-        <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '3rem' }}>
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2.5rem' }}>
           A complete path from zero to cybersecurity professional
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-          {modules.map((m, i) => (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(180px, 100%), 1fr))', gap: '1rem' }}>
+          {modules.map((m) => (
             <div key={m.title} style={{
               background: 'var(--card)', border: '1px solid var(--border)',
               borderRadius: '10px', padding: '1.2rem',
@@ -145,13 +150,13 @@ export default function Landing({ onGetStarted }) {
 
       {/* CTA */}
       <section style={{
-        textAlign: 'center', padding: '5rem 2rem',
+        textAlign: 'center', padding: '4rem 1.5rem',
         background: 'linear-gradient(to bottom, transparent, rgba(249,115,22,0.05))',
       }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1rem' }}>
+        <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, marginBottom: '1rem' }}>
           Ready to start your cybersecurity journey?
         </h2>
-        <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', maxWidth: '480px', margin: '0 auto 2rem' }}>
           Join Firebox Cyber Academy and get your own AI instructor today.
         </p>
         <button className="btn btn-primary" onClick={onGetStarted} style={{ fontSize: '1.05rem', padding: '0.85rem 2.5rem' }}>
@@ -161,7 +166,7 @@ export default function Landing({ onGetStarted }) {
 
       {/* Footer */}
       <footer style={{
-        textAlign: 'center', padding: '2rem', borderTop: '1px solid var(--border)',
+        textAlign: 'center', padding: '1.5rem', borderTop: '1px solid var(--border)',
         color: 'var(--text-muted)', fontSize: '0.85rem',
       }}>
         🔥 Firebox Cyber Academy — AI-powered cybersecurity education

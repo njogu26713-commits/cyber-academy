@@ -32,6 +32,14 @@ html, body {
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Prevent iOS auto-zoom on input focus (requires font-size >= 16px) */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
 }
 
 #root {

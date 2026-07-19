@@ -14,7 +14,6 @@ function statusIcon(status) {
 
 export default function Sidebar({ curriculum, progress, activeLesson, onSelectLesson, user, onLogout }) {
   const [expanded, setExpanded] = useState(() => {
-    // Expand first module by default
     const ids = new Set();
     if (curriculum[0]) ids.add(curriculum[0].id);
     return ids;
@@ -38,7 +37,7 @@ export default function Sidebar({ curriculum, progress, activeLesson, onSelectLe
     });
   };
 
-  const sidebar = (
+  const sidebarContent = (
     <aside style={{
       width: '280px', minWidth: '280px', background: 'var(--surface)',
       borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column',
@@ -55,8 +54,15 @@ export default function Sidebar({ curriculum, progress, activeLesson, onSelectLe
             Firebox <span style={{ color: 'var(--primary)' }}>Academy</span>
           </span>
         </div>
-        <button onClick={() => setSidebarOpen(false)}
-          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.1rem', display: window.innerWidth < 768 ? 'block' : 'none' }}>
+        <button
+          onClick={() => setSidebarOpen(false)}
+          className="sidebar-close-btn"
+          style={{
+            background: 'none', border: 'none', color: 'var(--text-muted)',
+            cursor: 'pointer', fontSize: '1.1rem', padding: '0.25rem',
+          }}
+          aria-label="Close menu"
+        >
           ✕
         </button>
       </div>
@@ -79,7 +85,7 @@ export default function Sidebar({ curriculum, progress, activeLesson, onSelectLe
             </div>
           </div>
           <button onClick={onLogout} title="Sign out"
-            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.85rem' }}>
+            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.85rem', padding: '0.25rem' }}>
             ⎋
           </button>
         </div>
@@ -171,27 +177,51 @@ export default function Sidebar({ curriculum, progress, activeLesson, onSelectLe
       {/* Mobile toggle button */}
       <button
         onClick={() => setSidebarOpen(true)}
+        className="mobile-menu-btn"
+        aria-label="Open menu"
         style={{
           display: 'none',
-          position: 'fixed', top: '1rem', left: '1rem', zIndex: 200,
+          position: 'fixed', top: '0.75rem', left: '0.75rem', zIndex: 200,
           background: 'var(--card)', border: '1px solid var(--border)',
-          borderRadius: '8px', padding: '0.5rem 0.7rem',
-          color: 'var(--text)', cursor: 'pointer', fontSize: '1rem',
+          borderRadius: '8px', padding: '0.5rem 0.65rem',
+          color: 'var(--text)', cursor: 'pointer', fontSize: '1.1rem',
+          lineHeight: 1,
         }}
-        className="mobile-menu-btn"
       >
         ☰
       </button>
 
       {/* Desktop sidebar */}
-      <div style={{ display: 'flex' }} className="sidebar-desktop">
-        {sidebar}
+      <div className="sidebar-desktop" style={{ display: 'flex' }}>
+        {sidebarContent}
       </div>
+
+      {/* Mobile overlay drawer */}
+      {sidebarOpen && (
+        <div className="sidebar-overlay">
+          {/* Backdrop */}
+          <div
+            onClick={() => setSidebarOpen(false)}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 299,
+              background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(2px)',
+            }}
+          />
+          {/* Drawer */}
+          <div style={{ position: 'fixed', top: 0, left: 0, zIndex: 300, height: '100vh' }}>
+            {sidebarContent}
+          </div>
+        </div>
+      )}
 
       <style>{`
         @media (max-width: 768px) {
           .sidebar-desktop { display: none !important; }
-          .mobile-menu-btn { display: block !important; }
+          .mobile-menu-btn { display: flex !important; align-items: center; justify-content: center; }
+          .sidebar-close-btn { display: flex !important; }
+        }
+        @media (min-width: 769px) {
+          .sidebar-close-btn { display: none !important; }
         }
       `}</style>
     </>
