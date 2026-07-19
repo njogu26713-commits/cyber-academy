@@ -69,7 +69,7 @@ router.get('/history/:lessonId', requireAuth, async (req, res) => {
 
 // Send a message
 router.post('/message', requireAuth, async (req, res) => {
-  const { lessonId, content } = req.body;
+  const { lessonId, content, systemContext } = req.body;
   if (!lessonId || !content?.trim())
     return res.status(400).json({ error: 'lessonId and content are required.' });
 
@@ -80,20 +80,26 @@ router.post('/message', requireAuth, async (req, res) => {
     });
   }
 
-  const lesson = getLessonById(lessonId);
-  if (!lesson) return res.status(404).json({ error: 'Lesson not found.' });
-
   const user = await User.findById(req.session.userId).select('username skillLevel');
 
   // Save user message
   await Message.create({ userId: req.session.userId, lessonId, role: 'user', content: content.trim() });
 
-  // Mark lesson as in_progress if not already started
-  await LessonProgress.findOneAndUpdate(
-    { userId: req.session.userId, lessonId },
-    { $setOnInsert: { status: 'in_progress', startedAt: new Date() } },
-    { upsert: true, new: true }
-  );
+  // For non-lesson contexts (e.g. Commands Library), systemContext is supplied by the client
+  let systemPrompt;
+  if (systemContext) {
+    systemPrompt = systemContext;
+  } else {
+    const lesson = getLessonById(lessonId);
+    if (!lesson) return res.status(404).json({ error: 'Lesson not found.' });
+    // Mark lesson as in_progress if not already started
+    await LessonProgress.findOneAndUpdate(
+      { userId: req.session.userId, lessonId },
+      { $setOnInsert: { status: 'in_progress', startedAt: new Date() } },
+      { upsert: true, new: true }
+    );
+    systemPrompt = buildSystemPrompt(lesson, user, user.skillLevel);
+  }
 
   // Build conversation history (last 40 messages)
   const history = await Message.find({ userId: req.session.userId, lessonId })
@@ -101,7 +107,6 @@ router.post('/message', requireAuth, async (req, res) => {
     .limit(40)
     .select('role content');
 
-  const systemPrompt = buildSystemPrompt(lesson, user, user.skillLevel);
   const messages = [
     { role: 'system', content: systemPrompt },
     ...history.map(m => ({ role: m.role, content: m.content })),

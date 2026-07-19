@@ -367,17 +367,17 @@ function AskKaiModal({ command, onClose }) {
 
     try {
       const context = `Command reference: ${command.name}\nDescription: ${command.description}\nSyntax: ${command.syntax}\nPurpose: ${command.purpose}\nFlags: ${command.flags?.map(f => `${f.flag}: ${f.description}`).join(', ')}\nExamples: ${command.examples?.map(e => `${e.command} — ${e.description}`).join('; ')}`;
-      const res = await fetch('/api/chat', {
+      const res = await fetch('/api/chat/message', {
         method: 'POST', credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: q,
-          systemContext: `You are Kai, a cybersecurity AI instructor at Firebox Academy. The user is asking about the "${command.name}" command. Here is the reference info:\n\n${context}\n\nGive a clear, practical explanation. Use examples. Keep it concise but thorough. If relevant, mention security implications.`,
+          content: q,
           lessonId: `command-${command.id}`,
+          systemContext: `You are Kai, a cybersecurity AI instructor at Firebox Academy. The user is asking about the "${command.name}" command. Here is the reference info:\n\n${context}\n\nGive a clear, practical explanation. Use examples. Keep it concise but thorough. If relevant, mention security implications.`,
         }),
       });
       const data = await res.json();
-      setMessages(m => [...m, { role: 'assistant', content: data.reply || data.message || 'Sorry, I had trouble responding.' }]);
+      setMessages(m => [...m, { role: 'assistant', content: data.reply || data.error || 'Sorry, I had trouble responding.' }]);
     } catch {
       setMessages(m => [...m, { role: 'assistant', content: 'Connection error. Please try again.' }]);
     }
