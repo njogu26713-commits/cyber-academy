@@ -10,6 +10,7 @@
     "start": "node server/index.js"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^9.6.0",
     "connect-mongo": "^6.0.0",
@@ -20,11 +21,10 @@
     "mongoose": "^9.7.4",
     "openai": "^4.104.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "vite": "^5.4.21"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.7.0",
-    "concurrently": "^8.2.2",
-    "vite": "^5.4.21"
+    "concurrently": "^8.2.2"
   }
 }
