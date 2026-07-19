@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar.jsx';
 import ChatInterface from '../components/ChatInterface.jsx';
 import CourseHome from '../components/CourseHome.jsx';
 import ModuleDetail from '../components/ModuleDetail.jsx';
+import CommandsLibrary from '../components/CommandsLibrary.jsx';
 
 export default function Learn() {
   const { user, logout } = useAuth();
@@ -11,8 +12,11 @@ export default function Learn() {
   const [progress, setProgress] = useState({ lessons: [], quizStats: [] });
   const [activeLesson, setActiveLesson] = useState(null);
   const [activeModule, setActiveModule] = useState(null);
-  const [view, setView] = useState('home'); // 'home' | 'module' | 'lesson'
+  const [view, setView] = useState('home'); // 'home' | 'module' | 'lesson' | 'commands'
   const [selectedModule, setSelectedModule] = useState(null);
+  const [learnedCommands, setLearnedCommands] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('firebox_learned_cmds') || '[]'); } catch { return []; }
+  });
 
   useEffect(() => {
     fetch('/api/curriculum', { credentials: 'include' })
@@ -54,6 +58,27 @@ export default function Learn() {
     setView('module');
   };
 
+  const handleToggleLearned = (cmdId) => {
+    setLearnedCommands(prev => {
+      const next = prev.includes(cmdId) ? prev.filter(id => id !== cmdId) : [...prev, cmdId];
+      localStorage.setItem('firebox_learned_cmds', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  // Commands library
+  if (view === 'commands') {
+    return (
+      <CommandsLibrary
+        user={user}
+        onLogout={logout}
+        onBack={handleBackToHome}
+        learnedCommands={learnedCommands}
+        onToggleLearned={handleToggleLearned}
+      />
+    );
+  }
+
   // Home: course card grid
   if (view === 'home') {
     return (
@@ -63,6 +88,7 @@ export default function Learn() {
         user={user}
         onLogout={logout}
         onOpenModule={handleOpenModule}
+        onOpenCommands={() => setView('commands')}
       />
     );
   }

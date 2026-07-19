@@ -179,7 +179,7 @@ function ModuleCard({ module, moduleIndex, modules, progressMap, onOpen, hovered
   );
 }
 
-export default function CourseHome({ curriculum, progress, user, onLogout, onOpenModule }) {
+export default function CourseHome({ curriculum, progress, user, onLogout, onOpenModule, onOpenCommands }) {
   const [filter, setFilter] = useState('All');
   const [hovered, setHovered] = useState(null);
 
@@ -306,6 +306,69 @@ export default function CourseHome({ curriculum, progress, user, onLogout, onOpe
             </button>
           ))}
         </div>
+
+        {/* Interactive Commands feature card — shown only on All tab */}
+        {filter === 'All' && (
+          <div
+            onClick={onOpenCommands}
+            onMouseEnter={() => setHovered('__commands__')}
+            onMouseLeave={() => setHovered(null)}
+            style={{
+              background: 'linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(249,115,22,0.06) 100%)',
+              border: `1px solid ${hovered === '__commands__' ? 'var(--secondary)' : 'rgba(59,130,246,0.3)'}`,
+              borderRadius: '14px', padding: '1.5rem',
+              cursor: 'pointer', marginBottom: '0.25rem',
+              transform: hovered === '__commands__' ? 'translateY(-3px) scale(1.005)' : 'translateY(0) scale(1)',
+              transition: 'all 0.18s ease',
+              boxShadow: hovered === '__commands__'
+                ? '0 8px 32px rgba(59,130,246,0.2), 0 0 0 1px rgba(59,130,246,0.25)'
+                : '0 2px 8px rgba(0,0,0,0.3)',
+              display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap',
+              position: 'relative', overflow: 'hidden',
+            }}
+          >
+            {hovered === '__commands__' && (
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, transparent, var(--secondary), transparent)' }} />
+            )}
+            <div style={{
+              width: '56px', height: '56px', borderRadius: '14px', flexShrink: 0,
+              background: 'rgba(59,130,246,0.15)', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', fontSize: '1.75rem',
+            }}>💻</div>
+            <div style={{ flex: 1, minWidth: '200px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
+                <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800 }}>Interactive Commands</h3>
+                <span style={{ fontSize: '0.7rem', padding: '0.15rem 0.5rem', borderRadius: '999px', background: 'rgba(59,130,246,0.15)', color: '#60a5fa', fontWeight: 700 }}>
+                  New
+                </span>
+              </div>
+              <p style={{ margin: '0 0 0.6rem', fontSize: '0.83rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                Learn Linux, networking, and security commands with AI explanations, interactive examples, and a built-in practice terminal.
+              </p>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                {[
+                  { icon: '📚', text: '25+ commands' },
+                  { icon: '💻', text: 'Practice terminal' },
+                  { icon: '🤖', text: 'Ask Kai' },
+                  { icon: '⚡', text: '3,000+ XP' },
+                ].map(({ icon, text }) => (
+                  <span key={text} style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                    {icon} {text}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div style={{
+              padding: '0.6rem 1.25rem', borderRadius: '8px', flexShrink: 0,
+              background: hovered === '__commands__' ? 'var(--secondary)' : 'rgba(59,130,246,0.12)',
+              border: '1px solid rgba(59,130,246,0.4)',
+              color: hovered === '__commands__' ? '#fff' : '#60a5fa',
+              fontSize: '0.85rem', fontWeight: 700, transition: 'all 0.18s',
+            }}>
+              Explore Commands →
+            </div>
+          </div>
+        )}
 
         {/* Course grid */}
         <div style={{
