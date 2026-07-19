@@ -42,17 +42,28 @@ function parseQuiz(content) {
   }
 }
 
-function Message({ msg }) {
+const QUICK_REPLIES = [
+  { label: 'Tell me more 📖',       text: 'Tell me more about this.' },
+  { label: 'Give an example 💡',    text: 'Can you give me a real-world example?' },
+  { label: 'Simplify this 🔄',      text: 'Can you explain that more simply?' },
+  { label: "Quiz me 🎯",            text: "Quiz me on what I've learned so far." },
+  { label: "What's next? ▶️",       text: "What should I learn next?" },
+  { label: 'I got it ✓',           text: 'Got it! Keep going.' },
+];
+
+function Message({ msg, isLast, onQuickReply }) {
   const isUser = msg.role === 'user';
   const { text, quiz } = isUser ? { text: msg.content, quiz: null } : parseQuiz(msg.content);
   const [showQuiz, setShowQuiz] = useState(!!quiz);
 
   return (
-    <div style={{
-      display: 'flex', flexDirection: isUser ? 'row-reverse' : 'row',
-      gap: '0.75rem', marginBottom: '1rem', alignItems: 'flex-start',
-      animation: 'fadeIn 0.25s ease',
-    }}>
+    <div
+      className={isUser ? 'msg-user' : 'msg-ai'}
+      style={{
+        display: 'flex', flexDirection: isUser ? 'row-reverse' : 'row',
+        gap: '0.75rem', marginBottom: '0.75rem', alignItems: 'flex-start',
+      }}
+    >
       {/* Avatar */}
       {!isUser && (
         <div style={{
@@ -109,6 +120,24 @@ function Message({ msg }) {
             onClose={() => setShowQuiz(false)}
           />
         )}
+
+        {/* Quick reply chips — only on last Kai message */}
+        {!isUser && isLast && !quiz && (
+          <div style={{
+            display: 'flex', flexWrap: 'wrap', gap: '0.45rem', marginTop: '0.7rem',
+          }}>
+            {QUICK_REPLIES.map((qr, i) => (
+              <button
+                key={qr.label}
+                className="quick-reply-chip"
+                style={{ animationDelay: `${i * 0.07}s` }}
+                onClick={() => onQuickReply(qr.text)}
+              >
+                {qr.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -164,8 +193,8 @@ export default function ChatInterface({ lesson, module: mod }) {
 
   useEffect(() => { scrollToBottom(); }, [messages, starting]);
 
-  const send = async () => {
-    const text = input.trim();
+  const send = async (overrideText) => {
+    const text = (typeof overrideText === 'string' ? overrideText : input).trim();
     if (!text || loading) return;
     setInput('');
     setError('');
@@ -273,7 +302,14 @@ export default function ChatInterface({ lesson, module: mod }) {
           </div>
         )}
 
-        {messages.map((msg, i) => <Message key={i} msg={msg} />)}
+        {messages.map((msg, i) => (
+          <Message
+            key={i}
+            msg={msg}
+            isLast={i === messages.length - 1 && !loading}
+            onQuickReply={(text) => send(text)}
+          />
+        ))}
 
         {loading && (
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', marginBottom: '1rem' }}>
