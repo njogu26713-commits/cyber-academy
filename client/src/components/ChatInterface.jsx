@@ -61,7 +61,7 @@ function Message({ msg, isLast, onQuickReply }) {
       className={isUser ? 'msg-user' : 'msg-ai'}
       style={{
         display: 'flex', flexDirection: isUser ? 'row-reverse' : 'row',
-        gap: '0.75rem', marginBottom: '0.75rem', alignItems: 'flex-start',
+        gap: '0.5rem', marginBottom: '0.75rem', alignItems: 'flex-start',
       }}
     >
       {/* Avatar */}
@@ -78,7 +78,7 @@ function Message({ msg, isLast, onQuickReply }) {
 
       <div style={{ maxWidth: '85%', minWidth: '60px' }}>
         {!isUser && (
-          <div style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 600, marginBottom: '0.3rem', letterSpacing: '0.03em' }}>
+          <div style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 600, marginBottom: '0.1rem', letterSpacing: '0.03em' }}>
             KAI · AI Instructor
           </div>
         )}
