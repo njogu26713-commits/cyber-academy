@@ -12,9 +12,7 @@
   "dependencies": {
     "@vitejs/plugin-react": "^4.7.0",
     "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^9.6.0",
     "connect-mongo": "^6.0.0",
-    "connect-sqlite3": "^0.9.17",
     "cors": "^2.8.6",
     "express": "^4.22.2",
     "express-session": "^1.19.0",
