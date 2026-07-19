@@ -1,0 +1,28 @@
+{
+  "name": "firebox-cyber-academy",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node --watch server/index.js",
+    "client": "vite --config vite.config.js --port 5000 --host 0.0.0.0",
+    "build": "vite build --config vite.config.js",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^9.6.0",
+    "connect-sqlite3": "^0.9.17",
+    "cors": "^2.8.6",
+    "express": "^4.22.2",
+    "express-session": "^1.19.0",
+    "openai": "^4.104.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
+    "concurrently": "^8.2.2",
+    "vite": "^5.4.21"
+  }
+}
