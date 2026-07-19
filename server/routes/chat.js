@@ -11,8 +11,11 @@ function requireAuth(req, res, next) {
 }
 
 function getOpenAI() {
-  if (!process.env.OPENAI_API_KEY) return null;
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  if (!process.env.GROQ_API_KEY) return null;
+  return new OpenAI({
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: 'https://api.groq.com/openai/v1',
+  });
 }
 
 function buildSystemPrompt(lesson, user, skillLevel) {
@@ -73,7 +76,7 @@ router.post('/message', requireAuth, async (req, res) => {
   const openai = getOpenAI();
   if (!openai) {
     return res.status(503).json({
-      error: 'OpenAI API key not configured. Please add your OPENAI_API_KEY secret in Replit.',
+      error: 'Groq API key not configured. Please add your GROQ_API_KEY secret in Replit.',
     });
   }
 
@@ -110,7 +113,7 @@ router.post('/message', requireAuth, async (req, res) => {
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'llama-3.3-70b-versatile',
       messages,
       max_tokens: 1000,
       temperature: 0.7,
@@ -137,7 +140,7 @@ router.post('/start', requireAuth, async (req, res) => {
   const openai = getOpenAI();
   if (!openai) {
     return res.status(503).json({
-      error: 'OpenAI API key not configured.',
+      error: 'Groq API key not configured.',
     });
   }
 
@@ -159,7 +162,7 @@ router.post('/start', requireAuth, async (req, res) => {
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'llama-3.3-70b-versatile',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: openingPrompt },

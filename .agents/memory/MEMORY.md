@@ -1,0 +1,1 @@
+- [AI provider setup](ai-provider.md) — uses Groq (not OpenAI); llama-3.3-70b-versatile via OpenAI-compatible SDK
