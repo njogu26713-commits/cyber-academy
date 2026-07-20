@@ -63,7 +63,7 @@ export default function QuizModal({ quiz, lessonId, onClose, onResult }) {
                 bg = 'rgba(239,68,68,0.1)'; border = 'rgba(239,68,68,0.5)'; color = '#ef4444';
               }
             } else if (i === selected) {
-              bg = 'rgba(249,115,22,0.1)'; border = 'var(--primary)'; color = 'var(--primary)';
+              bg = 'rgba(0,255,136,0.1)'; border = 'var(--primary)'; color = 'var(--primary)';
             }
 
             return (

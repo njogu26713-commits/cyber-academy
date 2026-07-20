@@ -5,27 +5,18 @@ import QuizModal from './QuizModal.jsx';
 function renderMarkdown(text) {
   return text
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    // Code blocks
     .replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) =>
       `<pre><code>${code.trimEnd()}</code></pre>`)
-    // Inline code
     .replace(/`([^`]+)`/g, '<code>$1</code>')
-    // Bold
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    // Italic
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    // Headings
     .replace(/^### (.+)$/gm, '<h3>$1</h3>')
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
     .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    // Unordered lists
     .replace(/^\s*[-•]\s+(.+)$/gm, '<li>$1</li>')
     .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
-    // Ordered lists  
     .replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>')
-    // Blockquote
     .replace(/^>\s+(.+)$/gm, '<blockquote>$1</blockquote>')
-    // Line breaks
     .replace(/\n\n/g, '</p><p>')
     .replace(/\n/g, '<br />');
 }
@@ -42,15 +33,6 @@ function parseQuiz(content) {
   }
 }
 
-const QUICK_REPLIES = [
-  { label: 'Tell me more 📖',       text: 'Tell me more about this.' },
-  { label: 'Give an example 💡',    text: 'Can you give me a real-world example?' },
-  { label: 'Simplify this 🔄',      text: 'Can you explain that more simply?' },
-  { label: "Quiz me 🎯",            text: "Quiz me on what I've learned so far." },
-  { label: "What's next? ▶️",       text: "What should I learn next?" },
-  { label: 'I got it ✓',           text: 'Got it! Keep going.' },
-];
-
 function Message({ msg, isLast, onQuickReply }) {
   const isUser = msg.role === 'user';
   const { text, quiz } = isUser ? { text: msg.content, quiz: null } : parseQuiz(msg.content);
@@ -64,16 +46,13 @@ function Message({ msg, isLast, onQuickReply }) {
         gap: '0.5rem', marginBottom: '0.75rem', alignItems: 'flex-start',
       }}
     >
-      {/* Avatar */}
       {!isUser && (
         <div style={{
           width: '34px', height: '34px', borderRadius: '50%',
           background: 'linear-gradient(135deg, #00ff88, #00e5ff)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '1rem', flexShrink: 0, marginTop: '2px',
-        }}>
-          🤖
-        </div>
+        }}>🤖</div>
       )}
 
       <div style={{ maxWidth: '85%', minWidth: '60px' }}>
@@ -88,21 +67,17 @@ function Message({ msg, isLast, onQuickReply }) {
           border: isUser ? 'none' : '1px solid var(--border)',
           borderRadius: isUser ? '16px 16px 4px 16px' : '4px 16px 16px 16px',
           padding: '0.75rem 1rem',
-          color: isUser ? '#fff' : 'var(--text)',
+          color: isUser ? '#000' : 'var(--text)',
           fontSize: '0.92rem', lineHeight: 1.65,
           wordBreak: 'break-word',
         }}>
           {isUser ? (
             <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{msg.content}</p>
           ) : (
-            <div
-              className="prose"
-              dangerouslySetInnerHTML={{ __html: `<p>${renderMarkdown(text)}</p>` }}
-            />
+            <div className="prose" dangerouslySetInnerHTML={{ __html: `<p>${renderMarkdown(text)}</p>` }} />
           )}
         </div>
 
-        {/* Quiz prompt */}
         {!isUser && quiz && !showQuiz && (
           <button
             onClick={() => setShowQuiz(true)}
@@ -114,19 +89,19 @@ function Message({ msg, isLast, onQuickReply }) {
         )}
 
         {showQuiz && quiz && (
-          <QuizModal
-            quiz={quiz}
-            lessonId={msg.lessonId}
-            onClose={() => setShowQuiz(false)}
-          />
+          <QuizModal quiz={quiz} lessonId={msg.lessonId} onClose={() => setShowQuiz(false)} />
         )}
 
-        {/* Quick reply chips — only on last Kai message */}
+        {/* Quick reply chips — only on last Kai message when no quiz */}
         {!isUser && isLast && !quiz && (
-          <div style={{
-            display: 'flex', flexWrap: 'wrap', gap: '0.45rem', marginTop: '0.7rem',
-          }}>
-            {QUICK_REPLIES.map((qr, i) => (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', marginTop: '0.7rem' }}>
+            {[
+              { label: 'Tell me more 📖', text: 'Tell me more about this.' },
+              { label: 'Give an example 💡', text: 'Can you give me a real-world example?' },
+              { label: 'Simplify this 🔄', text: 'Can you explain that more simply?' },
+              { label: "What's next? ▶️", text: "What should I learn next?" },
+              { label: 'I got it ✓', text: 'Got it! Keep going.' },
+            ].map((qr, i) => (
               <button
                 key={qr.label}
                 className="quick-reply-chip"
@@ -143,12 +118,41 @@ function Message({ msg, isLast, onQuickReply }) {
   );
 }
 
-export default function ChatInterface({ lesson, module: mod }) {
+// ── Action mode config ──────────────────────────────────────────────────────
+const MODES = [
+  {
+    id: 'ask',
+    icon: '🤖',
+    label: 'Ask Kai',
+    color: 'var(--secondary)',
+    glow: 'rgba(0,229,255,0.2)',
+    activeBg: 'rgba(0,229,255,0.07)',
+  },
+  {
+    id: 'quiz',
+    icon: '🎯',
+    label: 'Quiz Me',
+    color: 'var(--primary)',
+    glow: 'rgba(0,255,136,0.25)',
+    activeBg: 'rgba(0,255,136,0.07)',
+  },
+  {
+    id: 'practical',
+    icon: '🛠️',
+    label: 'Practical',
+    color: 'var(--warning)',
+    glow: 'rgba(255,204,0,0.2)',
+    activeBg: 'rgba(255,204,0,0.06)',
+  },
+];
+
+export default function ChatInterface({ lesson, module: mod, onProgressUpdate }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState('');
+  const [activeMode, setActiveMode] = useState('ask');
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -156,12 +160,12 @@ export default function ChatInterface({ lesson, module: mod }) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
-  // Load history when lesson changes
   useEffect(() => {
     if (!lesson) return;
     setMessages([]);
     setError('');
     setStarting(true);
+    setActiveMode('ask');
 
     fetch(`/api/chat/history/${lesson.id}`, { credentials: 'include' })
       .then(r => r.json())
@@ -170,7 +174,6 @@ export default function ChatInterface({ lesson, module: mod }) {
           setMessages(data.messages.map(m => ({ ...m, lessonId: lesson.id })));
           setStarting(false);
         } else {
-          // Start the lesson with Kai's intro
           return fetch('/api/chat/start', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -193,13 +196,10 @@ export default function ChatInterface({ lesson, module: mod }) {
 
   useEffect(() => { scrollToBottom(); }, [messages, starting]);
 
-  const send = async (overrideText) => {
-    const text = (typeof overrideText === 'string' ? overrideText : input).trim();
-    if (!text || loading) return;
-    setInput('');
+  const sendRaw = async (text) => {
+    if (!text.trim() || loading) return;
     setError('');
-
-    const userMsg = { role: 'user', content: text, lessonId: lesson.id };
+    const userMsg = { role: 'user', content: text.trim(), lessonId: lesson.id };
     setMessages(prev => [...prev, userMsg]);
     setLoading(true);
 
@@ -208,16 +208,45 @@ export default function ChatInterface({ lesson, module: mod }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ lessonId: lesson.id, content: text }),
+        body: JSON.stringify({ lessonId: lesson.id, content: text.trim() }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'AI unavailable');
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply, lessonId: lesson.id }]);
+      onProgressUpdate?.();
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
       inputRef.current?.focus();
+    }
+  };
+
+  const send = () => {
+    const text = input.trim();
+    if (!text) return;
+    setInput('');
+    sendRaw(text);
+  };
+
+  const triggerQuiz = () => {
+    sendRaw(
+      "Give me a quiz question about this lesson. Use the [QUIZ] format with 4 options. Pick a concept we've covered (or a key topic if we just started). Make it challenging but fair."
+    );
+    setActiveMode('ask');
+  };
+
+  const triggerPractical = () => {
+    sendRaw(
+      "Give me a hands-on practical challenge or lab exercise for this lesson. Describe exactly what I should try, what commands to run or concepts to apply, and what a successful result looks like. Keep it realistic and achievable."
+    );
+    setActiveMode('ask');
+  };
+
+  const handleModeClick = (id) => {
+    setActiveMode(id);
+    if (id === 'ask') {
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
   };
 
@@ -245,23 +274,23 @@ export default function ChatInterface({ lesson, module: mod }) {
         padding: '1.2rem 1.5rem', maxWidth: '360px',
       }}>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-          💡 <strong style={{ color: 'var(--text)' }}>Tip:</strong> Kai will introduce each topic, ask you questions to check understanding, and quiz you at the end. Just have a conversation!
+          💡 <strong style={{ color: 'var(--text)' }}>Tip:</strong> Use the three buttons at the bottom — <strong style={{ color: 'var(--secondary)' }}>Ask Kai</strong> to chat, <strong style={{ color: 'var(--primary)' }}>Quiz Me</strong> to test yourself, or <strong style={{ color: 'var(--warning)' }}>Practical</strong> for a hands-on challenge.
         </p>
       </div>
       <style>{`@media (max-width: 768px) { .mobile-hint { display: block !important; } }`}</style>
     </div>
   );
 
+  const activeModeCfg = MODES.find(m => m.id === activeMode);
+
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+
       {/* Lesson header */}
-      <div
-        className="chat-header"
-        style={{
-          padding: '0.9rem 1.5rem', borderBottom: '1px solid var(--border)',
-          background: 'var(--surface)', display: 'flex', alignItems: 'center', gap: '0.8rem',
-        }}
-      >
+      <div className="chat-header" style={{
+        padding: '0.9rem 1.5rem', borderBottom: '1px solid var(--border)',
+        background: 'var(--surface)', display: 'flex', alignItems: 'center', gap: '0.8rem',
+      }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.1rem' }}>
             {mod?.icon} {mod?.title}
@@ -272,10 +301,10 @@ export default function ChatInterface({ lesson, module: mod }) {
         </div>
         <div style={{
           display: 'flex', alignItems: 'center', gap: '0.4rem',
-          background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)',
-          borderRadius: '999px', padding: '0.25rem 0.7rem', fontSize: '0.72rem', color: '#22c55e', flexShrink: 0,
+          background: 'rgba(0,255,136,0.08)', border: '1px solid rgba(0,255,136,0.25)',
+          borderRadius: '999px', padding: '0.25rem 0.7rem', fontSize: '0.72rem', color: 'var(--primary)', flexShrink: 0,
         }}>
-          <div style={{ width: '6px', height: '6px', background: '#22c55e', borderRadius: '50%', animation: 'pulse 2s ease infinite' }} />
+          <div style={{ width: '6px', height: '6px', background: 'var(--primary)', borderRadius: '50%', animation: 'pulse 2s ease infinite' }} />
           Kai Online
         </div>
       </div>
@@ -289,14 +318,9 @@ export default function ChatInterface({ lesson, module: mod }) {
               background: 'linear-gradient(135deg, #00ff88, #00e5ff)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', flexShrink: 0,
             }}>🤖</div>
-            <div style={{
-              background: 'var(--card)', border: '1px solid var(--border)',
-              borderRadius: '4px 16px 16px 16px', padding: '0.75rem 1rem',
-            }}>
+            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '4px 16px 16px 16px', padding: '0.75rem 1rem' }}>
               <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-                <div className="typing-dot" />
-                <div className="typing-dot" />
-                <div className="typing-dot" />
+                <div className="typing-dot" /><div className="typing-dot" /><div className="typing-dot" />
               </div>
             </div>
           </div>
@@ -307,7 +331,7 @@ export default function ChatInterface({ lesson, module: mod }) {
             key={i}
             msg={msg}
             isLast={i === messages.length - 1 && !loading}
-            onQuickReply={(text) => send(text)}
+            onQuickReply={(text) => sendRaw(text)}
           />
         ))}
 
@@ -318,14 +342,9 @@ export default function ChatInterface({ lesson, module: mod }) {
               background: 'linear-gradient(135deg, #00ff88, #00e5ff)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', flexShrink: 0,
             }}>🤖</div>
-            <div style={{
-              background: 'var(--card)', border: '1px solid var(--border)',
-              borderRadius: '4px 16px 16px 16px', padding: '0.75rem 1rem',
-            }}>
+            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '4px 16px 16px 16px', padding: '0.75rem 1rem' }}>
               <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-                <div className="typing-dot" />
-                <div className="typing-dot" />
-                <div className="typing-dot" />
+                <div className="typing-dot" /><div className="typing-dot" /><div className="typing-dot" />
               </div>
             </div>
           </div>
@@ -333,9 +352,9 @@ export default function ChatInterface({ lesson, module: mod }) {
 
         {error && (
           <div style={{
-            background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)',
+            background: 'rgba(255,34,68,0.08)', border: '1px solid rgba(255,34,68,0.3)',
             borderRadius: '10px', padding: '0.8rem 1rem', marginBottom: '1rem',
-            fontSize: '0.88rem', color: '#f87171',
+            fontSize: '0.88rem', color: '#ff6685',
           }}>
             ⚠️ {error}
           </div>
@@ -344,78 +363,178 @@ export default function ChatInterface({ lesson, module: mod }) {
         <div ref={bottomRef} />
       </div>
 
-      {/* Suggested prompts */}
-      {messages.length === 1 && !loading && (
-        <div style={{ padding: '0 1.5rem 0.8rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      {/* Suggested prompts — shown only after lesson intro */}
+      {messages.length === 1 && !loading && activeMode === 'ask' && (
+        <div style={{ padding: '0 1.5rem 0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           {[
             "Let's start! Teach me this topic 🚀",
             "Give me an overview first",
             "Start with the basics",
           ].map(prompt => (
-            <button key={prompt} onClick={() => { setInput(prompt); inputRef.current?.focus(); }}
+            <button key={prompt}
+              onClick={() => { setInput(prompt); inputRef.current?.focus(); }}
               style={{
                 background: 'var(--card)', border: '1px solid var(--border)',
                 borderRadius: '999px', padding: '0.35rem 0.9rem',
                 fontSize: '0.8rem', color: 'var(--text-dim)', cursor: 'pointer',
                 transition: 'border-color 0.15s', fontFamily: 'var(--sans)',
               }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--secondary)'}
               onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
-            >
-              {prompt}
-            </button>
+            >{prompt}</button>
           ))}
         </div>
       )}
 
-      {/* Input */}
+      {/* ── Mode tabs ── */}
       <div style={{
-        padding: '0.75rem 1rem', borderTop: '1px solid var(--border)', background: 'var(--surface)',
+        padding: '0 1rem',
+        borderTop: '1px solid var(--border)',
+        background: 'var(--surface)',
+        display: 'flex', gap: '0.5rem',
+        paddingTop: '0.6rem',
       }}>
-        <div style={{
-          display: 'flex', gap: '0.75rem', alignItems: 'flex-end',
-          background: 'var(--card)', border: '1px solid var(--border)',
-          borderRadius: '12px', padding: '0.6rem 0.6rem 0.6rem 1rem',
-          transition: 'border-color 0.15s',
-        }}
-          onFocusCapture={e => e.currentTarget.style.borderColor = 'var(--primary)'}
-          onBlurCapture={e => e.currentTarget.style.borderColor = 'var(--border)'}
-        >
-          <textarea
-            ref={inputRef}
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKey}
-            placeholder="Ask Kai anything about this lesson..."
-            rows={1}
-            style={{
-              flex: 1, background: 'none', border: 'none', outline: 'none',
-              color: 'var(--text)', fontFamily: 'var(--sans)', fontSize: '1rem',
-              resize: 'none', lineHeight: 1.5, padding: 0, maxHeight: '120px',
-              overflowY: 'auto',
+        {MODES.map(btn => {
+          const isActive = activeMode === btn.id;
+          return (
+            <button
+              key={btn.id}
+              onClick={() => handleModeClick(btn.id)}
+              disabled={loading}
+              style={{
+                flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
+                gap: '0.18rem', padding: '0.55rem 0.25rem 0.45rem',
+                background: isActive ? btn.activeBg : 'transparent',
+                border: `1px solid ${isActive ? btn.color : 'transparent'}`,
+                borderBottom: 'none',
+                borderRadius: '8px 8px 0 0',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.15s',
+                boxShadow: isActive ? `0 -3px 14px ${btn.glow}` : 'none',
+                opacity: loading ? 0.5 : 1,
+              }}
+              onMouseEnter={e => { if (!isActive && !loading) { e.currentTarget.style.background = btn.activeBg; e.currentTarget.style.borderColor = btn.color; } }}
+              onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'transparent'; } }}
+            >
+              <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>{btn.icon}</span>
+              <span style={{
+                fontSize: '0.7rem', fontWeight: isActive ? 700 : 500,
+                color: isActive ? btn.color : 'var(--text-muted)',
+                letterSpacing: '0.03em',
+              }}>{btn.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── Input panel (changes per mode) ── */}
+      <div style={{ padding: '0 1rem 0.75rem', background: 'var(--surface)' }}>
+
+        {activeMode === 'ask' && (
+          <>
+            <div style={{
+              display: 'flex', gap: '0.75rem', alignItems: 'flex-end',
+              background: 'var(--card)', border: `1px solid var(--border)`,
+              borderRadius: '0 8px 8px 8px', padding: '0.6rem 0.6rem 0.6rem 1rem',
+              transition: 'border-color 0.15s',
             }}
-            onInput={e => {
-              e.target.style.height = 'auto';
-              e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
-            }}
-          />
-          <button
-            onClick={send}
-            disabled={!input.trim() || loading}
-            style={{
-              width: '36px', height: '36px', borderRadius: '8px', flexShrink: 0,
-              background: input.trim() && !loading ? 'var(--primary)' : 'var(--border)',
-              border: 'none', cursor: input.trim() && !loading ? 'pointer' : 'default',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '1rem', transition: 'background 0.15s',
-            }}
-          >
-            ↑
-          </button>
-        </div>
-        <div className="chat-input-hint" style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.4rem', textAlign: 'center' }}>
-          Press Enter to send · Shift+Enter for new line · Kai remembers your conversation
-        </div>
+              onFocusCapture={e => e.currentTarget.style.borderColor = 'var(--secondary)'}
+              onBlurCapture={e => e.currentTarget.style.borderColor = 'var(--border)'}
+            >
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={handleKey}
+                placeholder="Ask Kai anything about this lesson…"
+                rows={1}
+                style={{
+                  flex: 1, background: 'none', border: 'none', outline: 'none',
+                  color: 'var(--text)', fontFamily: 'var(--sans)', fontSize: '1rem',
+                  resize: 'none', lineHeight: 1.5, padding: 0, maxHeight: '120px', overflowY: 'auto',
+                }}
+                onInput={e => {
+                  e.target.style.height = 'auto';
+                  e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+                }}
+              />
+              <button
+                onClick={send}
+                disabled={!input.trim() || loading}
+                style={{
+                  width: '36px', height: '36px', borderRadius: '8px', flexShrink: 0,
+                  background: input.trim() && !loading ? 'var(--secondary)' : 'var(--border)',
+                  border: 'none', cursor: input.trim() && !loading ? 'pointer' : 'default',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '1rem', transition: 'background 0.15s', color: '#000',
+                }}
+              >↑</button>
+            </div>
+            <div className="chat-input-hint" style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.35rem', textAlign: 'center' }}>
+              Enter to send · Shift+Enter for new line
+            </div>
+          </>
+        )}
+
+        {activeMode === 'quiz' && (
+          <div style={{
+            background: 'rgba(0,255,136,0.05)', border: '1px solid rgba(0,255,136,0.2)',
+            borderRadius: '0 8px 8px 8px', padding: '1rem 1.25rem',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            gap: '1rem', flexWrap: 'wrap',
+          }}>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--primary)', marginBottom: '0.25rem' }}>
+                🎯 Quiz Me
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                Kai will ask you a scored multiple-choice question on this lesson. Your answer is saved to your progress.
+              </div>
+            </div>
+            <button
+              onClick={triggerQuiz}
+              disabled={loading}
+              style={{
+                padding: '0.65rem 1.5rem', borderRadius: '8px', flexShrink: 0,
+                background: 'var(--primary)', border: 'none', color: '#000',
+                fontWeight: 700, fontSize: '0.88rem',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                opacity: loading ? 0.5 : 1,
+                boxShadow: '0 0 16px rgba(0,255,136,0.35)',
+              }}
+            >{loading ? 'Loading…' : '▶ Start Quiz'}</button>
+          </div>
+        )}
+
+        {activeMode === 'practical' && (
+          <div style={{
+            background: 'rgba(255,204,0,0.05)', border: '1px solid rgba(255,204,0,0.2)',
+            borderRadius: '0 8px 8px 8px', padding: '1rem 1.25rem',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            gap: '1rem', flexWrap: 'wrap',
+          }}>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--warning)', marginBottom: '0.25rem' }}>
+                🛠️ Practical Challenge
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                Kai will give you a real hands-on exercise or lab task based on this lesson topic.
+              </div>
+            </div>
+            <button
+              onClick={triggerPractical}
+              disabled={loading}
+              style={{
+                padding: '0.65rem 1.5rem', borderRadius: '8px', flexShrink: 0,
+                background: 'var(--warning)', border: 'none', color: '#000',
+                fontWeight: 700, fontSize: '0.88rem',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                opacity: loading ? 0.5 : 1,
+                boxShadow: '0 0 16px rgba(255,204,0,0.3)',
+              }}
+            >{loading ? 'Loading…' : '▶ Get Challenge'}</button>
+          </div>
+        )}
       </div>
 
       <style>{`
