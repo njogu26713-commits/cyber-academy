@@ -38,63 +38,75 @@ function Message({ msg, isLast, onQuickReply }) {
   const { text, quiz } = isUser ? { text: msg.content, quiz: null } : parseQuiz(msg.content);
   const [showQuiz, setShowQuiz] = useState(!!quiz);
 
-  return (
-    <div
-      className={isUser ? 'msg-user' : 'msg-ai'}
-      style={{
-        display: 'flex', flexDirection: isUser ? 'row-reverse' : 'row',
-        gap: '0.5rem', marginBottom: '0.75rem', alignItems: 'flex-start',
-      }}
-    >
-      {!isUser && (
+  /* ── User bubble ── */
+  if (isUser) {
+    return (
+      <div className="msg-user" style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.85rem' }}>
         <div style={{
-          width: '34px', height: '34px', borderRadius: '50%',
-          background: 'linear-gradient(135deg, #00ff88, #00e5ff)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1rem', flexShrink: 0, marginTop: '2px',
-        }}>🤖</div>
-      )}
-
-      <div style={{ maxWidth: '85%', minWidth: '60px' }}>
-        {!isUser && (
-          <div style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 600, marginBottom: '0.1rem', letterSpacing: '0.03em' }}>
-            KAI · AI Instructor
-          </div>
-        )}
-
-        <div style={{
-          background: isUser ? 'var(--primary)' : 'var(--card)',
-          border: isUser ? 'none' : '1px solid var(--border)',
-          borderRadius: isUser ? '16px 16px 4px 16px' : '4px 16px 16px 16px',
-          padding: '0.75rem 1rem',
-          color: isUser ? '#000' : 'var(--text)',
-          fontSize: '0.92rem', lineHeight: 1.65,
-          wordBreak: 'break-word',
+          maxWidth: '78%',
+          background: 'var(--primary)',
+          borderRadius: '16px 16px 4px 16px',
+          padding: '0.75rem 1.1rem',
+          color: '#000', fontSize: '0.92rem', lineHeight: 1.65,
+          wordBreak: 'break-word', fontWeight: 500,
         }}>
-          {isUser ? (
-            <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{msg.content}</p>
-          ) : (
-            <div className="prose" dangerouslySetInnerHTML={{ __html: `<p>${renderMarkdown(text)}</p>` }} />
-          )}
+          <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{msg.content}</p>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Kai full-width card with avatar on top ── */
+  return (
+    <div className="msg-ai" style={{ marginBottom: '1.25rem', paddingTop: '22px', position: 'relative' }}>
+
+      {/* Avatar — centered, sitting on top of the card border */}
+      <div style={{
+        position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
+        width: '44px', height: '44px', borderRadius: '50%',
+        background: 'linear-gradient(135deg, #00ff88, #00e5ff)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: '1.25rem', zIndex: 2,
+        boxShadow: '0 0 0 3px var(--bg), 0 0 18px rgba(0,255,136,0.35)',
+      }}>🤖</div>
+
+      {/* Card — full width, merges both sides */}
+      <div style={{
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
+        borderRadius: '14px',
+        padding: '1.5rem 1.25rem 1rem',
+        position: 'relative',
+      }}>
+        {/* KAI label inside card, just below avatar */}
+        <div style={{
+          textAlign: 'center', fontSize: '0.68rem', fontWeight: 700,
+          color: 'var(--primary)', letterSpacing: '0.1em',
+          marginBottom: '0.75rem', textTransform: 'uppercase',
+        }}>
+          Kai · AI Instructor
         </div>
 
-        {!isUser && quiz && !showQuiz && (
+        {/* Message content */}
+        <div style={{ fontSize: '0.92rem', lineHeight: 1.7, color: 'var(--text)', wordBreak: 'break-word' }}>
+          <div className="prose" dangerouslySetInnerHTML={{ __html: `<p>${renderMarkdown(text)}</p>` }} />
+        </div>
+
+        {/* Quiz trigger */}
+        {quiz && !showQuiz && (
           <button
             onClick={() => setShowQuiz(true)}
-            className="btn btn-ghost"
-            style={{ marginTop: '0.5rem', fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}
-          >
-            🎯 Take Quiz
-          </button>
+            style={{
+              marginTop: '0.85rem', padding: '0.45rem 1rem', borderRadius: '8px',
+              background: 'rgba(0,255,136,0.1)', border: '1px solid rgba(0,255,136,0.3)',
+              color: 'var(--primary)', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 700,
+            }}
+          >🎯 Take Quiz</button>
         )}
 
-        {showQuiz && quiz && (
-          <QuizModal quiz={quiz} lessonId={msg.lessonId} onClose={() => setShowQuiz(false)} />
-        )}
-
-        {/* Quick reply chips — only on last Kai message when no quiz */}
-        {!isUser && isLast && !quiz && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', marginTop: '0.7rem' }}>
+        {/* Quick reply chips */}
+        {isLast && !quiz && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '0.85rem' }}>
             {[
               { label: 'Tell me more 📖', text: 'Tell me more about this.' },
               { label: 'Give an example 💡', text: 'Can you give me a real-world example?' },
@@ -114,6 +126,10 @@ function Message({ msg, isLast, onQuickReply }) {
           </div>
         )}
       </div>
+
+      {showQuiz && quiz && (
+        <QuizModal quiz={quiz} lessonId={msg.lessonId} onClose={() => setShowQuiz(false)} />
+      )}
     </div>
   );
 }
