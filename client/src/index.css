@@ -5,21 +5,21 @@
 }
 
 :root {
-  --bg: #050a14;
-  --surface: #0c1524;
-  --card: #111d35;
-  --border: #1a2e4a;
-  --border-bright: #1e3d60;
-  --primary: #f97316;
-  --primary-dim: #c2560e;
-  --primary-glow: rgba(249,115,22,0.15);
-  --secondary: #3b82f6;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --warning: #eab308;
-  --text: #e2e8f0;
-  --text-muted: #64748b;
-  --text-dim: #94a3b8;
+  --bg: #000000;
+  --surface: #060606;
+  --card: #0c0c0c;
+  --border: #0f2010;
+  --border-bright: #1a3a1a;
+  --primary: #00ff88;
+  --primary-dim: #00cc6a;
+  --primary-glow: rgba(0,255,136,0.12);
+  --secondary: #00e5ff;
+  --success: #00ff88;
+  --danger: #ff2244;
+  --warning: #ffcc00;
+  --text: #e2ede2;
+  --text-muted: #4d6b4d;
+  --text-dim: #7a9a7a;
   --mono: 'JetBrains Mono', 'Fira Code', monospace;
   --sans: 'Inter', system-ui, sans-serif;
 }
@@ -80,14 +80,14 @@ a:hover {
 .prose code {
   font-family: var(--mono);
   font-size: 0.85em;
-  background: rgba(249,115,22,0.08);
-  border: 1px solid rgba(249,115,22,0.2);
-  color: #fb923c;
+  background: rgba(0,255,136,0.07);
+  border: 1px solid rgba(0,255,136,0.2);
+  color: #00ff88;
   padding: 0.1em 0.4em;
   border-radius: 4px;
 }
 .prose pre {
-  background: #0a1628;
+  background: #050505;
   border: 1px solid var(--border-bright);
   border-radius: 8px;
   padding: 1em;
@@ -97,7 +97,7 @@ a:hover {
 .prose pre code {
   background: none;
   border: none;
-  color: #7dd3fc;
+  color: #00e5ff;
   padding: 0;
   font-size: 0.88em;
 }
@@ -176,8 +176,8 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
-  background: rgba(249,115,22,0.07);
-  border: 1px solid rgba(249,115,22,0.25);
+  background: rgba(0,255,136,0.05);
+  border: 1px solid rgba(0,255,136,0.2);
   color: var(--text-dim);
   border-radius: 999px;
   padding: 0.32rem 0.85rem;
@@ -189,7 +189,7 @@ a:hover {
   animation: chipPop 0.28s cubic-bezier(0.34, 1.5, 0.64, 1) both;
 }
 .quick-reply-chip:hover {
-  background: rgba(249,115,22,0.16);
+  background: rgba(0,255,136,0.12);
   border-color: var(--primary);
   color: var(--primary);
   transform: translateY(-1px);
@@ -227,7 +227,8 @@ a:hover {
   background: var(--primary);
   color: #fff;
 }
-.btn-primary:hover { background: #ea6c10; transform: translateY(-1px); }
+.btn-primary { color: #000; }
+.btn-primary:hover { background: var(--primary-dim); transform: translateY(-1px); }
 .btn-primary:active { transform: translateY(0); }
 .btn-ghost {
   background: transparent;
@@ -278,6 +279,6 @@ a:hover {
   font-weight: 500;
   gap: 0.3em;
 }
-.badge-beginner { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
-.badge-intermediate { background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.25); }
-.badge-advanced { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+.badge-beginner { background: rgba(0,255,136,0.10); color: #00ff88; border: 1px solid rgba(0,255,136,0.25); }
+.badge-intermediate { background: rgba(0,229,255,0.10); color: #00e5ff; border: 1px solid rgba(0,229,255,0.25); }
+.badge-advanced { background: rgba(255,34,68,0.10); color: #ff2244; border: 1px solid rgba(255,34,68,0.25); }

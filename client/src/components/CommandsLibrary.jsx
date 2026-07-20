@@ -4,7 +4,7 @@ import { commands, CATEGORIES, TERMINAL_SIMULATIONS } from '../data/commands.js'
 const DIFFICULTY_COLOR = {
   Beginner:     { color: '#22c55e', bg: 'rgba(34,197,94,0.12)' },
   Intermediate: { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
-  Advanced:     { color: '#ef4444', bg: 'rgba(239,68,68,0.12)' },
+  Advanced:     { color: '#ff2244', bg: 'rgba(255,34,68,0.10)' },
 };
 
 // ─── Terminal Component ───────────────────────────────────────────────────────
@@ -102,7 +102,7 @@ function Terminal({ preloadCommand }) {
         padding: '0.5rem 0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0,
       }}>
         <div style={{ display: 'flex', gap: '5px' }}>
-          {['#ef4444','#f59e0b','#22c55e'].map(c => (
+          {['#ff2244','#ffcc00','#00ff88'].map(c => (
             <div key={c} style={{ width: '11px', height: '11px', borderRadius: '50%', background: c, opacity: 0.8 }} />
           ))}
         </div>
@@ -115,15 +115,15 @@ function Terminal({ preloadCommand }) {
           if (line.type === 'spacer') return <div key={i} style={{ height: '4px' }} />;
           if (line.type === 'prompt') return (
             <div key={i} style={{ color: '#22c55e', whiteSpace: 'pre-wrap', marginBottom: '1px' }}>
-              <span style={{ color: '#f97316' }}>kai@firebox</span>
-              <span style={{ color: '#64748b' }}>:</span>
-              <span style={{ color: '#3b82f6' }}>~</span>
+              <span style={{ color: '#00ff88' }}>kai@firebox</span>
+              <span style={{ color: '#4d6b4d' }}>:</span>
+              <span style={{ color: '#00e5ff' }}>~</span>
               <span style={{ color: '#64748b' }}>$ </span>
               <span style={{ color: '#e2e8f0' }}>{line.text}</span>
             </div>
           );
           if (line.type === 'error') return (
-            <div key={i} style={{ color: '#ef4444', whiteSpace: 'pre-wrap', marginBottom: '1px' }}>{line.text}</div>
+            <div key={i} style={{ color: '#ff2244', whiteSpace: 'pre-wrap', marginBottom: '1px' }}>{line.text}</div>
           );
           if (line.type === 'info') return (
             <div key={i} style={{ color: '#64748b', whiteSpace: 'pre-wrap', fontStyle: 'italic', marginBottom: '1px' }}>{line.text}</div>
@@ -139,9 +139,9 @@ function Terminal({ preloadCommand }) {
         display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0,
         background: '#0d1220',
       }}>
-        <span style={{ color: '#f97316', whiteSpace: 'nowrap', userSelect: 'none' }}>kai@firebox</span>
-        <span style={{ color: '#64748b', userSelect: 'none' }}>:</span>
-        <span style={{ color: '#3b82f6', userSelect: 'none' }}>~</span>
+        <span style={{ color: '#00ff88', whiteSpace: 'nowrap', userSelect: 'none' }}>kai@firebox</span>
+        <span style={{ color: '#4d6b4d', userSelect: 'none' }}>:</span>
+        <span style={{ color: '#00e5ff', userSelect: 'none' }}>~</span>
         <span style={{ color: '#64748b', userSelect: 'none' }}>$</span>
         <input
           ref={inputRef}
@@ -154,7 +154,7 @@ function Terminal({ preloadCommand }) {
           style={{
             flex: 1, background: 'transparent', border: 'none', outline: 'none',
             color: '#e2e8f0', fontFamily: 'inherit', fontSize: 'inherit',
-            caretColor: '#f97316',
+            caretColor: '#00ff88',
           }}
         />
       </div>
@@ -197,7 +197,7 @@ function CommandDetail({ command, learnedSet, onToggleLearned, onAskKai }) {
             onClick={() => onAskKai(command)}
             style={{
               padding: '0.5rem 1rem', borderRadius: '8px',
-              background: 'linear-gradient(135deg, var(--primary), #ef4444)',
+              background: 'linear-gradient(135deg, var(--primary), #00e5ff)',
               border: 'none', color: '#fff', cursor: 'pointer',
               fontSize: '0.82rem', fontWeight: 700,
             }}
@@ -298,7 +298,7 @@ function CommandDetail({ command, learnedSet, onToggleLearned, onAskKai }) {
       {/* Common mistakes */}
       {command.commonMistakes?.length > 0 && (
         <section>
-          <h3 style={{ margin: '0 0 0.6rem', fontSize: '0.8rem', fontWeight: 700, color: '#ef4444', textTransform: 'uppercase', letterSpacing: '0.08em' }}>⚠️ Common Mistakes</h3>
+          <h3 style={{ margin: '0 0 0.6rem', fontSize: '0.8rem', fontWeight: 700, color: '#ff2244', textTransform: 'uppercase', letterSpacing: '0.08em' }}>⚠️ Common Mistakes</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
             {command.commonMistakes.map((m, i) => (
               <div key={i} style={{
@@ -413,7 +413,7 @@ function AskKaiModal({ command, onClose }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <div style={{
               width: '32px', height: '32px', borderRadius: '50%',
-              background: 'linear-gradient(135deg, var(--primary), #ef4444)',
+              background: 'linear-gradient(135deg, var(--primary), #00e5ff)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem',
             }}>🤖</div>
             <div>
@@ -435,7 +435,7 @@ function AskKaiModal({ command, onClose }) {
               gap: '0.5rem', marginBottom: '0.75rem', alignItems: 'flex-start',
             }}>
               {msg.role === 'assistant' && (
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), #ef4444)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>🤖</div>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), #00e5ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>🤖</div>
               )}
               <div style={{
                 maxWidth: '85%', background: msg.role === 'user' ? 'var(--primary)' : 'var(--card)',
@@ -451,7 +451,7 @@ function AskKaiModal({ command, onClose }) {
           ))}
           {loading && (
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), #ef4444)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>🤖</div>
+              <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), #00e5ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>🤖</div>
               <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '4px 16px 16px 16px', padding: '0.65rem 0.9rem', display: 'flex', gap: '4px', alignItems: 'center' }}>
                 {[0,1,2].map(n => <div key={n} className="typing-dot" style={{ animationDelay: `${n*0.15}s` }} />)}
               </div>
@@ -495,12 +495,25 @@ function AskKaiModal({ command, onClose }) {
   );
 }
 
+// ─── useIsMobile hook ─────────────────────────────────────────────────────────
+function useIsMobile(bp = 700) {
+  const [mobile, setMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < bp);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${bp - 1}px)`);
+    const handler = e => setMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [bp]);
+  return mobile;
+}
+
 // ─── Main CommandsLibrary ─────────────────────────────────────────────────────
 export default function CommandsLibrary({ user, onLogout, onBack, learnedCommands, onToggleLearned }) {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const [selected, setSelected] = useState(null);
   const [askKaiCmd, setAskKaiCmd] = useState(null);
+  const isMobile = useIsMobile();
 
   const learnedSet = new Set(learnedCommands || []);
   const totalCmds = commands.length;
@@ -514,180 +527,237 @@ export default function CommandsLibrary({ user, onLogout, onBack, learnedCommand
     return matchesCat && matchesSearch;
   });
 
+  // On mobile, selecting a command slides to detail view; back returns to list
+  const showDetail = isMobile ? !!selected : true;
+  const showList   = isMobile ? !selected : true;
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)', fontFamily: 'var(--sans)' }}>
-      {/* Nav */}
+
+      {/* ── Nav bar ── */}
       <nav style={{
         position: 'sticky', top: 0, zIndex: 50,
         background: 'rgba(5,10,20,0.92)', backdropFilter: 'blur(12px)',
         borderBottom: '1px solid var(--border)',
-        padding: '0.85rem 1.5rem',
-        display: 'flex', alignItems: 'center', gap: '1rem',
+        padding: isMobile ? '0.7rem 1rem' : '0.85rem 1.5rem',
+        display: 'flex', alignItems: 'center', gap: '0.75rem',
       }}>
-        <button onClick={onBack} style={{
-          background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px',
-          padding: '0.4rem 0.75rem', color: 'var(--text-muted)', cursor: 'pointer',
-          fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem',
-        }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+        {/* Back button — goes to home on list view, back to list on detail view (mobile) */}
+        <button
+          onClick={isMobile && selected ? () => setSelected(null) : onBack}
+          style={{
+            background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px',
+            padding: '0.4rem 0.7rem', color: 'var(--text-muted)', cursor: 'pointer',
+            fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0,
+          }}
         >
-          ← Home
+          ← {isMobile && selected ? 'Back' : 'Home'}
         </button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '1.2rem' }}>💻</span>
-          <span style={{ fontWeight: 800, fontSize: '0.95rem' }}>
-            Interactive <span style={{ color: 'var(--primary)' }}>Commands</span>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', minWidth: 0 }}>
+          <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>💻</span>
+          <span style={{ fontWeight: 800, fontSize: isMobile ? '0.88rem' : '0.95rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {isMobile && selected
+              ? <code style={{ color: 'var(--primary)', fontFamily: '"JetBrains Mono", monospace' }}>{selected.name}</code>
+              : <><span>Interactive </span><span style={{ color: 'var(--primary)' }}>Commands</span></>
+            }
           </span>
         </div>
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600 }}>⚡ {xpEarned} XP</div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{learnedCount}/{totalCmds} learned</div>
+
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 600 }}>⚡ {xpEarned}</span>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{learnedCount}/{totalCmds}</span>
         </div>
       </nav>
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1.5rem 1.25rem', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+      {/* ── Body ── */}
+      <div style={{
+        maxWidth: '1200px', margin: '0 auto',
+        padding: isMobile ? '1rem' : '1.5rem 1.25rem',
+        display: isMobile ? 'block' : 'flex',
+        gap: '1.5rem',
+      }}>
 
-        {/* Left column — search + list */}
-        <div style={{ width: 'min(100%, 340px)', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-
-          {/* Stats */}
+        {/* ── LEFT: search + categories + list ── */}
+        {showList && (
           <div style={{
-            background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px',
-            padding: '1rem', display: 'flex', gap: '0.75rem',
+            width: isMobile ? '100%' : 'min(100%, 340px)',
+            flexShrink: 0,
+            display: 'flex', flexDirection: 'column', gap: '0.85rem',
           }}>
-            {[
-              { label: 'Learned', value: `${learnedCount}/${totalCmds}`, color: 'var(--primary)' },
-              { label: 'XP earned', value: `⚡ ${xpEarned}`, color: 'var(--secondary)' },
-              { label: 'Progress', value: `${Math.round((learnedCount / totalCmds) * 100)}%`, color: 'var(--success)' },
-            ].map(({ label, value, color }) => (
-              <div key={label} style={{ flex: 1, textAlign: 'center', background: 'var(--card)', borderRadius: '8px', padding: '0.5rem 0.25rem' }}>
-                <div style={{ fontSize: '1rem', fontWeight: 800, color }}>{value}</div>
-                <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{label}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{ background: 'var(--border)', borderRadius: '999px', height: '5px', overflow: 'hidden' }}>
-            <div style={{ height: '100%', borderRadius: '999px', background: 'linear-gradient(90deg, var(--primary), #ef4444)', width: `${(learnedCount / totalCmds) * 100}%`, transition: 'width 0.4s' }} />
-          </div>
 
-          {/* Search */}
-          <div style={{ position: 'relative' }}>
-            <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.9rem', pointerEvents: 'none' }}>🔍</span>
-            <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search commands..."
-              style={{
-                width: '100%', boxSizing: 'border-box',
-                background: 'var(--card)', border: '1px solid var(--border)',
-                borderRadius: '8px', padding: '0.6rem 0.9rem 0.6rem 2.2rem',
-                color: 'var(--text)', fontSize: '0.88rem', outline: 'none',
-              }}
-              onFocus={e => e.target.style.borderColor = 'var(--primary)'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}
-            />
-          </div>
-
-          {/* Category tabs */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-            {CATEGORIES.map(cat => {
-              const count = cat.id === 'all' ? commands.length : commands.filter(c => c.category === cat.id).length;
-              const learnedInCat = cat.id === 'all'
-                ? learnedCount
-                : commands.filter(c => c.category === cat.id && learnedSet.has(c.id)).length;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setCategory(cat.id)}
-                  style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '0.55rem 0.85rem', borderRadius: '8px',
-                    background: category === cat.id ? 'rgba(249,115,22,0.12)' : 'transparent',
-                    border: `1px solid ${category === cat.id ? 'var(--primary)' : 'transparent'}`,
-                    color: category === cat.id ? 'var(--primary)' : 'var(--text-muted)',
-                    cursor: 'pointer', textAlign: 'left', transition: 'all 0.12s',
-                    fontSize: '0.85rem', fontWeight: category === cat.id ? 700 : 400,
-                  }}
-                >
-                  <span>{cat.icon} {cat.label}</span>
-                  <span style={{ fontSize: '0.72rem', opacity: 0.7 }}>{learnedInCat}/{count}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Command list */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', maxHeight: '60vh', overflowY: 'auto' }}>
-            {filtered.length === 0 && (
-              <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', padding: '1rem', textAlign: 'center' }}>No commands found</div>
-            )}
-            {filtered.map(cmd => {
-              const isActive = selected?.id === cmd.id;
-              const diff = DIFFICULTY_COLOR[cmd.difficulty] || DIFFICULTY_COLOR.Beginner;
-              return (
-                <button
-                  key={cmd.id}
-                  onClick={() => setSelected(cmd)}
-                  style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '0.65rem 0.85rem', borderRadius: '8px',
-                    background: isActive ? 'rgba(249,115,22,0.1)' : 'var(--card)',
-                    border: `1px solid ${isActive ? 'var(--primary)' : 'var(--border)'}`,
-                    borderLeft: `3px solid ${isActive ? 'var(--primary)' : diff.color}`,
-                    cursor: 'pointer', textAlign: 'left', transition: 'all 0.12s',
-                  }}
-                  onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; }}
-                  onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'var(--card)'; }}
-                >
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <code style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: '0.85rem', color: isActive ? 'var(--primary)' : 'var(--text)', fontWeight: 700 }}>
-                        {cmd.name}
-                      </code>
-                      {learnedSet.has(cmd.id) && <span style={{ color: 'var(--success)', fontSize: '0.7rem' }}>✓</span>}
-                    </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '220px' }}>
-                      {cmd.description.slice(0, 50)}…
-                    </div>
-                  </div>
-                  <span style={{ fontSize: '0.68rem', color: diff.color, fontWeight: 600, flexShrink: 0, marginLeft: '0.5rem' }}>
-                    {cmd.difficulty}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Right column — detail */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          {selected ? (
-            <CommandDetail
-              command={selected}
-              learnedSet={learnedSet}
-              onToggleLearned={onToggleLearned}
-              onAskKai={setAskKaiCmd}
-            />
-          ) : (
+            {/* Stats strip */}
             <div style={{
-              height: '60vh', display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
-              color: 'var(--text-muted)', textAlign: 'center',
-              background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px',
+              background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px',
+              padding: '0.85rem', display: 'flex', gap: '0.6rem',
             }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💻</div>
-              <h2 style={{ margin: '0 0 0.5rem', fontSize: '1.2rem', color: 'var(--text)' }}>Select a Command</h2>
-              <p style={{ margin: 0, fontSize: '0.88rem', maxWidth: '280px', lineHeight: 1.6 }}>
-                Choose a command from the list to see its syntax, flags, examples, and practice in the terminal.
-              </p>
+              {[
+                { label: 'Learned', value: `${learnedCount}/${totalCmds}`, color: 'var(--primary)' },
+                { label: 'XP earned', value: `⚡ ${xpEarned}`, color: 'var(--secondary)' },
+                { label: 'Progress', value: `${Math.round((learnedCount / totalCmds) * 100)}%`, color: 'var(--success)' },
+              ].map(({ label, value, color }) => (
+                <div key={label} style={{ flex: 1, textAlign: 'center', background: 'var(--card)', borderRadius: '8px', padding: '0.45rem 0.2rem' }}>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 800, color }}>{value}</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{label}</div>
+                </div>
+              ))}
             </div>
-          )}
-        </div>
+            <div style={{ background: 'var(--border)', borderRadius: '999px', height: '4px', overflow: 'hidden' }}>
+              <div style={{ height: '100%', borderRadius: '999px', background: 'linear-gradient(90deg, var(--primary), #00e5ff)', width: `${(learnedCount / totalCmds) * 100}%`, transition: 'width 0.4s' }} />
+            </div>
+
+            {/* Search */}
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.9rem', pointerEvents: 'none' }}>🔍</span>
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search commands..."
+                style={{
+                  width: '100%', boxSizing: 'border-box',
+                  background: 'var(--card)', border: '1px solid var(--border)',
+                  borderRadius: '8px', padding: '0.6rem 0.9rem 0.6rem 2.2rem',
+                  color: 'var(--text)', fontSize: '0.88rem', outline: 'none',
+                }}
+                onFocus={e => e.target.style.borderColor = 'var(--primary)'}
+                onBlur={e => e.target.style.borderColor = 'var(--border)'}
+              />
+            </div>
+
+            {/* Category tabs — vertical on desktop, horizontal scroll on mobile */}
+            {isMobile ? (
+              <div style={{
+                display: 'flex', gap: '0.4rem',
+                overflowX: 'auto', paddingBottom: '2px',
+                scrollbarWidth: 'none',
+                WebkitOverflowScrolling: 'touch',
+              }}>
+                {CATEGORIES.map(cat => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setCategory(cat.id)}
+                    style={{
+                      flexShrink: 0,
+                      padding: '0.4rem 0.75rem', borderRadius: '999px',
+                      background: category === cat.id ? 'rgba(249,115,22,0.15)' : 'var(--card)',
+                      border: `1px solid ${category === cat.id ? 'var(--primary)' : 'var(--border)'}`,
+                      color: category === cat.id ? 'var(--primary)' : 'var(--text-muted)',
+                      cursor: 'pointer', fontSize: '0.78rem', fontWeight: category === cat.id ? 700 : 400,
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {cat.icon} {cat.label}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                {CATEGORIES.map(cat => {
+                  const count = cat.id === 'all' ? commands.length : commands.filter(c => c.category === cat.id).length;
+                  const learnedInCat = cat.id === 'all'
+                    ? learnedCount
+                    : commands.filter(c => c.category === cat.id && learnedSet.has(c.id)).length;
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setCategory(cat.id)}
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        padding: '0.55rem 0.85rem', borderRadius: '8px',
+                        background: category === cat.id ? 'rgba(249,115,22,0.12)' : 'transparent',
+                        border: `1px solid ${category === cat.id ? 'var(--primary)' : 'transparent'}`,
+                        color: category === cat.id ? 'var(--primary)' : 'var(--text-muted)',
+                        cursor: 'pointer', textAlign: 'left', transition: 'all 0.12s',
+                        fontSize: '0.85rem', fontWeight: category === cat.id ? 700 : 400,
+                      }}
+                    >
+                      <span>{cat.icon} {cat.label}</span>
+                      <span style={{ fontSize: '0.72rem', opacity: 0.7 }}>{learnedInCat}/{count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Command list */}
+            <div style={{
+              display: 'flex', flexDirection: 'column', gap: '0.35rem',
+              // On desktop cap height; on mobile let it grow naturally (page scrolls)
+              ...(isMobile ? {} : { maxHeight: '60vh', overflowY: 'auto' }),
+            }}>
+              {filtered.length === 0 && (
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', padding: '1rem', textAlign: 'center' }}>No commands found</div>
+              )}
+              {filtered.map(cmd => {
+                const isActive = !isMobile && selected?.id === cmd.id;
+                const diff = DIFFICULTY_COLOR[cmd.difficulty] || DIFFICULTY_COLOR.Beginner;
+                return (
+                  <button
+                    key={cmd.id}
+                    onClick={() => setSelected(cmd)}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: isMobile ? '0.75rem 0.85rem' : '0.65rem 0.85rem',
+                      borderRadius: '8px',
+                      background: isActive ? 'rgba(249,115,22,0.1)' : 'var(--card)',
+                      border: `1px solid ${isActive ? 'var(--primary)' : 'var(--border)'}`,
+                      borderLeft: `3px solid ${isActive ? 'var(--primary)' : diff.color}`,
+                      cursor: 'pointer', textAlign: 'left', transition: 'all 0.12s',
+                    }}
+                  >
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <code style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: '0.85rem', color: isActive ? 'var(--primary)' : 'var(--text)', fontWeight: 700 }}>
+                          {cmd.name}
+                        </code>
+                        {learnedSet.has(cmd.id) && <span style={{ color: 'var(--success)', fontSize: '0.7rem' }}>✓</span>}
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '230px' }}>
+                        {cmd.description.slice(0, 52)}…
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, marginLeft: '0.5rem' }}>
+                      <span style={{ fontSize: '0.68rem', color: diff.color, fontWeight: 600 }}>{cmd.difficulty}</span>
+                      {isMobile && <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>›</span>}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ── RIGHT: detail panel ── */}
+        {showDetail && (
+          <div style={{ flex: 1, minWidth: 0, marginTop: isMobile ? 0 : 0 }}>
+            {selected ? (
+              <CommandDetail
+                command={selected}
+                learnedSet={learnedSet}
+                onToggleLearned={onToggleLearned}
+                onAskKai={setAskKaiCmd}
+              />
+            ) : (
+              /* Only shown on desktop when nothing selected */
+              <div style={{
+                height: '60vh', display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                color: 'var(--text-muted)', textAlign: 'center',
+                background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px',
+              }}>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💻</div>
+                <h2 style={{ margin: '0 0 0.5rem', fontSize: '1.2rem', color: 'var(--text)' }}>Select a Command</h2>
+                <p style={{ margin: 0, fontSize: '0.88rem', maxWidth: '280px', lineHeight: 1.6 }}>
+                  Choose a command from the list to see its syntax, flags, examples, and practice in the terminal.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {askKaiCmd && (
-        <AskKaiModal command={askKaiCmd} onClose={() => setAskKaiCmd(null)} />
+        <AskKaiModal command={askKaiCmd} onClose={() => setAskKaiCmd(null)} isMobile={isMobile} />
       )}
     </div>
   );

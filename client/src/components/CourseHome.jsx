@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const LEVEL_CONFIG = {
   Beginner:     { color: '#22c55e', bg: 'rgba(34,197,94,0.12)',  icon: '🟢' },
   Intermediate: { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', icon: '🟡' },
-  Advanced:     { color: '#ef4444', bg: 'rgba(239,68,68,0.12)',  icon: '🔴' },
+  Advanced:     { color: '#ff2244', bg: 'rgba(255,34,68,0.10)',  icon: '🔴' },
 };
 const XP_PER_LESSON = 100;
 const MINS_PER_LESSON = 15;
@@ -141,7 +141,7 @@ function ModuleCard({ module, moduleIndex, modules, progressMap, onOpen, hovered
             height: '100%', borderRadius: '999px',
             background: status === 'completed'
               ? 'linear-gradient(90deg, var(--success), #16a34a)'
-              : 'linear-gradient(90deg, var(--primary), #ef4444)',
+              : 'linear-gradient(90deg, var(--primary), #00e5ff)',
             width: `${pct}%`,
             transition: 'width 0.6s ease',
           }} />
@@ -221,7 +221,7 @@ export default function CourseHome({ curriculum, progress, user, onLogout, onOpe
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <div style={{
               width: '30px', height: '30px', borderRadius: '50%',
-              background: 'linear-gradient(135deg, var(--primary), #ef4444)',
+              background: 'linear-gradient(135deg, var(--primary), #00e5ff)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '0.8rem', fontWeight: 700, color: '#fff',
             }}>
@@ -245,7 +245,7 @@ export default function CourseHome({ curriculum, progress, user, onLogout, onOpe
 
         {/* Hero stats */}
         <div style={{
-          background: 'linear-gradient(135deg, var(--surface) 0%, rgba(249,115,22,0.06) 100%)',
+          background: 'linear-gradient(135deg, var(--surface) 0%, rgba(0,255,136,0.05) 100%)',
           border: '1px solid var(--border)', borderRadius: '16px',
           padding: '1.75rem 2rem', marginBottom: '2rem',
           display: 'flex', flexWrap: 'wrap', gap: '1.5rem',
@@ -281,7 +281,7 @@ export default function CourseHome({ curriculum, progress, user, onLogout, onOpe
           <div style={{ background: 'var(--border)', borderRadius: '999px', height: '8px', overflow: 'hidden' }}>
             <div style={{
               height: '100%', borderRadius: '999px',
-              background: 'linear-gradient(90deg, var(--primary), #ef4444)',
+              background: 'linear-gradient(90deg, var(--primary), #00e5ff)',
               width: `${overallPct}%`, transition: 'width 0.6s ease',
             }} />
           </div>
@@ -314,14 +314,14 @@ export default function CourseHome({ curriculum, progress, user, onLogout, onOpe
             onMouseEnter={() => setHovered('__commands__')}
             onMouseLeave={() => setHovered(null)}
             style={{
-              background: 'linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(249,115,22,0.06) 100%)',
-              border: `1px solid ${hovered === '__commands__' ? 'var(--secondary)' : 'rgba(59,130,246,0.3)'}`,
+              background: 'linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(0,255,136,0.04) 100%)',
+              border: `1px solid ${hovered === '__commands__' ? 'var(--secondary)' : 'rgba(0,229,255,0.25)'}`,
               borderRadius: '14px', padding: '1.5rem',
               cursor: 'pointer', marginBottom: '0.25rem',
               transform: hovered === '__commands__' ? 'translateY(-3px) scale(1.005)' : 'translateY(0) scale(1)',
               transition: 'all 0.18s ease',
               boxShadow: hovered === '__commands__'
-                ? '0 8px 32px rgba(59,130,246,0.2), 0 0 0 1px rgba(59,130,246,0.25)'
+                ? '0 8px 32px rgba(0,229,255,0.18), 0 0 0 1px rgba(0,229,255,0.2)'
                 : '0 2px 8px rgba(0,0,0,0.3)',
               display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap',
               position: 'relative', overflow: 'hidden',
@@ -332,13 +332,13 @@ export default function CourseHome({ curriculum, progress, user, onLogout, onOpe
             )}
             <div style={{
               width: '56px', height: '56px', borderRadius: '14px', flexShrink: 0,
-              background: 'rgba(59,130,246,0.15)', display: 'flex', alignItems: 'center',
+              background: 'rgba(0,229,255,0.1)', display: 'flex', alignItems: 'center',
               justifyContent: 'center', fontSize: '1.75rem',
             }}>💻</div>
             <div style={{ flex: 1, minWidth: '200px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
                 <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800 }}>Interactive Commands</h3>
-                <span style={{ fontSize: '0.7rem', padding: '0.15rem 0.5rem', borderRadius: '999px', background: 'rgba(59,130,246,0.15)', color: '#60a5fa', fontWeight: 700 }}>
+                <span style={{ fontSize: '0.7rem', padding: '0.15rem 0.5rem', borderRadius: '999px', background: 'rgba(0,229,255,0.1)', color: '#00e5ff', fontWeight: 700 }}>
                   New
                 </span>
               </div>
@@ -360,9 +360,9 @@ export default function CourseHome({ curriculum, progress, user, onLogout, onOpe
             </div>
             <div style={{
               padding: '0.6rem 1.25rem', borderRadius: '8px', flexShrink: 0,
-              background: hovered === '__commands__' ? 'var(--secondary)' : 'rgba(59,130,246,0.12)',
-              border: '1px solid rgba(59,130,246,0.4)',
-              color: hovered === '__commands__' ? '#fff' : '#60a5fa',
+              background: hovered === '__commands__' ? 'var(--secondary)' : 'rgba(0,229,255,0.08)',
+              border: '1px solid rgba(0,229,255,0.3)',
+              color: hovered === '__commands__' ? '#000' : '#00e5ff',
               fontSize: '0.85rem', fontWeight: 700, transition: 'all 0.18s',
             }}>
               Explore Commands →

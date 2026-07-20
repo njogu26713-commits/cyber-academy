@@ -67,7 +67,7 @@ export default function Landing({ onGetStarted }) {
         }}>
           Your Personal AI<br />
           <span style={{
-            background: 'linear-gradient(135deg, #f97316, #ef4444)',
+            background: 'linear-gradient(135deg, #00ff88, #00e5ff)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           }}>Cybersecurity Instructor</span>
         </h1>

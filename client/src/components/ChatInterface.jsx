@@ -68,7 +68,7 @@ function Message({ msg, isLast, onQuickReply }) {
       {!isUser && (
         <div style={{
           width: '34px', height: '34px', borderRadius: '50%',
-          background: 'linear-gradient(135deg, #f97316, #ef4444)',
+          background: 'linear-gradient(135deg, #00ff88, #00e5ff)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '1rem', flexShrink: 0, marginTop: '2px',
         }}>
@@ -286,7 +286,7 @@ export default function ChatInterface({ lesson, module: mod }) {
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', marginBottom: '1rem' }}>
             <div style={{
               width: '34px', height: '34px', borderRadius: '50%',
-              background: 'linear-gradient(135deg, #f97316, #ef4444)',
+              background: 'linear-gradient(135deg, #00ff88, #00e5ff)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', flexShrink: 0,
             }}>🤖</div>
             <div style={{
@@ -315,7 +315,7 @@ export default function ChatInterface({ lesson, module: mod }) {
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', marginBottom: '1rem' }}>
             <div style={{
               width: '34px', height: '34px', borderRadius: '50%',
-              background: 'linear-gradient(135deg, #f97316, #ef4444)',
+              background: 'linear-gradient(135deg, #00ff88, #00e5ff)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', flexShrink: 0,
             }}>🤖</div>
             <div style={{
