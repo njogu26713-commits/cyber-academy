@@ -90,14 +90,20 @@ const Learn = ({
 
   if (view === 'module' && selectedModule) {
     return (
-      <ModuleDetail
-        module={selectedModule}
-        curriculum={curriculum}
-        progressMap={progress}
-        user={user}
-        onBack={goHome}
-        onLogout={logout}
-      />
+      ```jsx
+<ModuleDetail
+  module={selectedModule}
+  curriculum={curriculum}
+  progressMap={progress}
+  user={user}
+  onBack={goHome}
+  onLogout={logout}
+  onSelectLesson={(lesson, module) => {
+    console.log('Lesson selected:', lesson);
+  }}
+/>
+```
+
     );
   }
 
