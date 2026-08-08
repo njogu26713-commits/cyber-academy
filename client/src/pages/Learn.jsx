@@ -98,11 +98,7 @@ const Learn = ({
   user={user}
   onBack={goHome}
   onLogout={logout}
-  onSelectLesson={(lesson, module) => {
-    console.log('Lesson selected:', lesson);
-  }}
 />
-```
 
     );
   }
