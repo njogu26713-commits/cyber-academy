@@ -282,6 +282,7 @@ export default function CommandsChat({
   const [sendError, setSendError] = useState(null);
   const [conversationStarted, setConversationStarted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCommandId, setSelectedCommandId] = useState(ALL_COMMANDS[0]?.id || '');
 
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
@@ -340,7 +341,11 @@ export default function CommandsChat({
     try {
       if (typeof onAskKai === 'function') {
         let fullText = '';
-        const maybePromise = onAskKai({ text: msg }, (chunk) => {
+        // Pass both commandId and prompt as expected by the API
+        const maybePromise = onAskKai({
+          commandId: selectedCommandId,
+          prompt: msg,
+        }, (chunk) => {
           if (!chunk) return;
           fullText += chunk;
         });
@@ -366,7 +371,7 @@ export default function CommandsChat({
       setPhase('done');
       setMood('neutral');
     }
-  }, [input, phase, onAskKai, beginTyping]);
+  }, [input, phase, onAskKai, selectedCommandId, beginTyping]);
 
   const handleKey = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
