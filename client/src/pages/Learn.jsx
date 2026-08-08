@@ -4,7 +4,6 @@ import KaiTeacher from '../components/KaiTeacher.jsx';
 import CourseHome from '../components/CourseHome.jsx';
 import ModuleDetail from '../components/ModuleDetail.jsx';
 import CommandsChat from '../components/CommandsChat.jsx';
-import { commands as ALL_COMMANDS } from '../data/commands';
 
 const Learn = ({
   user,
@@ -23,21 +22,24 @@ const Learn = ({
   useEffect(() => {
     let mounted = true;
 
-    const load = async () => {
+    const loadCurriculum = async () => {
       try {
         const res = await fetch('/api/curriculum', {
           credentials: 'include',
         });
 
-        if (!res.ok) return;
+        if (!res.ok) {
+          console.error('Curriculum request failed:', res.status);
+          return;
+        }
 
         const data = await res.json();
 
-        if (!mounted) return;
-
-        setCurriculum(data.curriculum || []);
+        if (mounted) {
+          setCurriculum(data.curriculum || []);
+        }
       } catch (err) {
-        console.error('Failed to load curriculum', err);
+        console.error('Failed to load curriculum:', err);
       } finally {
         if (mounted) {
           setLoadingCurriculum(false);
@@ -45,14 +47,13 @@ const Learn = ({
       }
     };
 
-    load();
+    loadCurriculum();
 
     return () => {
       mounted = false;
     };
   }, []);
 
-  // Ask Kai to explain a command
   const onAskKai = async (params) => {
     try {
       const res = await fetch('/api/chat/explain', {
@@ -71,12 +72,11 @@ const Learn = ({
         const data = await res.json().catch(() => ({}));
 
         throw new Error(
-          data.error || `Request failed (${res.status})`
+          data.error || 'Request failed (' + res.status + ')'
         );
       }
 
       const data = await res.json();
-
       return data.reply;
     } catch (error) {
       console.error('Kai explanation error:', error);
@@ -84,19 +84,24 @@ const Learn = ({
     }
   };
 
-  // Open a module
   const handleOpenModule = (module) => {
     setSelectedModule(module);
     setView('module');
   };
 
-  // Return to course home
   const goHome = () => {
     setSelectedModule(null);
     setView('home');
   };
 
-  // Open Commands
+  const goToCommands = () => {
+    setView('commands');
+  };
+
+  const goToKai = () => {
+    setView('kai');
+  };
+
   if (view === 'commands') {
     return (
       <CommandsChat
@@ -110,7 +115,6 @@ const Learn = ({
     );
   }
 
-  // Open selected module
   if (view === 'module' && selectedModule) {
     return (
       <ModuleDetail
@@ -124,7 +128,6 @@ const Learn = ({
     );
   }
 
-  // Open Kai
   if (view === 'kai') {
     return (
       <KaiTeacher
@@ -135,7 +138,6 @@ const Learn = ({
     );
   }
 
-  // Course home
   return (
     <CourseHome
       curriculum={curriculum}
@@ -143,8 +145,8 @@ const Learn = ({
       user={user}
       onLogout={logout}
       onOpenModule={handleOpenModule}
-      onOpenCommands={() => setView('commands')}
-      onOpenKai={() => setView('kai')}
+      onOpenCommands={goToCommands}
+      onOpenKai={goToKai}
       learnedCommands={learnedCommands}
     />
   );
