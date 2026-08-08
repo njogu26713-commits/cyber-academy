@@ -39,14 +39,15 @@ const Learn = ({
     return () => { mounted = false; };
   }, []);
 
-  const onAskKai = async (cmd) => {
+  // This is called by CommandsLibrary/CommandsChat with { commandId, prompt }
+  const onAskKai = async (params) => {
     try {
       const res = await fetch('/api/chat/explain', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          commandId: cmd.id,
-          prompt: cmd.text,
+          commandId: params.commandId,
+          prompt: params.prompt,
         }),
         credentials: 'include',
       });
