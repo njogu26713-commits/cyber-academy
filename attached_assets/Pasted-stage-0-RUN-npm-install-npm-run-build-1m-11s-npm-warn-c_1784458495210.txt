@@ -1,0 +1,48 @@
+stage-0
+RUN npm install && npm run build
+1m 11s
+npm warn config production Use `--omit=dev` instead.
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'bson@7.3.1',
+npm warn EBADENGINE   required: { node: '>=20.19.0' },
+npm warn EBADENGINE   current: { node: 'v18.20.5', npm: '10.8.2' }
+npm warn EBADENGINE }
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'connect-mongo@6.0.0',
+npm warn EBADENGINE   required: { node: '>=20.8.0' },
+npm warn EBADENGINE   current: { node: 'v18.20.5', npm: '10.8.2' }
+npm warn EBADENGINE }
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'mongodb@7.5.0',
+npm warn EBADENGINE   required: { node: '>=20.19.0' },
+npm warn EBADENGINE   current: { node: 'v18.20.5', npm: '10.8.2' }
+npm warn EBADENGINE }
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'mongodb-connection-string-url@7.0.2',
+npm warn EBADENGINE   required: { node: '>=20.19.0' },
+npm warn EBADENGINE   current: { node: 'v18.20.5', npm: '10.8.2' }
+npm warn EBADENGINE }
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'mongoose@9.7.4',
+npm warn EBADENGINE   required: { node: '>=20.19.0' },
+npm warn EBADENGINE   current: { node: 'v18.20.5', npm: '10.8.2' }
+npm warn EBADENGINE }
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'mongodb@7.2.0',
+npm warn EBADENGINE   required: { node: '>=20.19.0' },
+npm warn EBADENGINE   current: { node: 'v18.20.5', npm: '10.8.2' }
+npm warn EBADENGINE }
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'mquery@6.0.0',
+npm warn EBADENGINE   required: { node: '>=20.19.0' },
+npm warn EBADENGINE   current: { node: 'v18.20.5', npm: '10.8.2' }
+npm warn EBADENGINE }
+npm error Exit handler never called!
+npm error This is an error with npm itself. Please report this error at:
+npm error   <https://github.com/npm/cli/issues>
+npm error A complete log of this run can be found in: /root/.npm/_logs/2026-07-19T10_52_49_937Z-debug-0.log
+npm warn config production Use `--omit=dev` instead.
+> firebox-cyber-academy@1.0.0 build
+> vite build --config vite.config.js
+sh: 1: vite: not found
+Build Failed: build daemon returned an error < failed to solve: process "/bin/bash -ol pipefail -c npm install && npm run build" did not complete successfully: exit code: 127 >

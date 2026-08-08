@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "template": "tanstack_start_ts_current",
+  "revision": "tanstack_start_ts_current-00331c4932b5",
+  "meta": {
+    "responsive": true,
+    "breakpoints": {
+      "sm": 640,
+      "md": 768,
+      "lg": 1024,
+      "xl": 1280,
+      "2xl": 1536
+    }
+  }
+}

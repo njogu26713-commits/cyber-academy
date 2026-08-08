@@ -1,0 +1,394 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #000000;
+  --surface: #060606;
+  --card: #0c0c0c;
+  --border: #0f2010;
+  --border-bright: #1a3a1a;
+  --primary: #00ff88;
+  --primary-dim: #00cc6a;
+  --primary-glow: rgba(0,255,136,0.12);
+  --secondary: #00e5ff;
+  --success: #00ff88;
+  --danger: #ff2244;
+  --warning: #ffcc00;
+  --text: #e2ede2;
+  --text-muted: #4d6b4d;
+  --text-dim: #7a9a7a;
+  --mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Prevent iOS auto-zoom on input focus (requires font-size >= 16px) */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
+#root {
+  height: 100%;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-dim); }
+
+/* Prose / Markdown styles inside chat */
+.prose h1, .prose h2, .prose h3 {
+  color: var(--text);
+  font-weight: 600;
+  margin: 0.8em 0 0.4em;
+  line-height: 1.3;
+}
+.prose h1 { font-size: 1.3em; }
+.prose h2 { font-size: 1.15em; }
+.prose h3 { font-size: 1.05em; }
+.prose p { margin: 0.5em 0; }
+.prose ul, .prose ol {
+  padding-left: 1.4em;
+  margin: 0.4em 0;
+}
+.prose li { margin: 0.2em 0; }
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: rgba(0,255,136,0.07);
+  border: 1px solid rgba(0,255,136,0.2);
+  color: #00ff88;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+}
+.prose pre {
+  background: #050505;
+  border: 1px solid var(--border-bright);
+  border-radius: 8px;
+  padding: 1em;
+  overflow-x: auto;
+  margin: 0.6em 0;
+}
+.prose pre code {
+  background: none;
+  border: none;
+  color: #00e5ff;
+  padding: 0;
+  font-size: 0.88em;
+}
+.prose strong { color: #fff; font-weight: 600; }
+.prose em { color: var(--text-dim); }
+.prose blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1em;
+  color: var(--text-dim);
+  margin: 0.5em 0;
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5em 0;
+  font-size: 0.9em;
+}
+.prose th, .prose td {
+  padding: 0.5em 0.8em;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+.prose th {
+  background: var(--card);
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-18px) translateY(6px) scale(0.97); }
+  to   { opacity: 1; transform: translateX(0)    translateY(0)   scale(1);    }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(18px) translateY(6px) scale(0.97); }
+  to   { opacity: 1; transform: translateX(0)    translateY(0)   scale(1);    }
+}
+@keyframes chipPop {
+  from { opacity: 0; transform: translateY(6px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0);    opacity: 1; }
+  40%           { transform: translateY(-6px); opacity: 0.7; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Message slide animations */
+.msg-ai {
+  animation: slideInLeft 0.32s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+.msg-user {
+  animation: slideInRight 0.28s cubic-bezier(0.34, 1.3, 0.64, 1) both;
+}
+
+/* Quick reply chip */
+.quick-reply-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  background: rgba(0,255,136,0.05);
+  border: 1px solid rgba(0,255,136,0.2);
+  color: var(--text-dim);
+  border-radius: 999px;
+  padding: 0.32rem 0.85rem;
+  font-size: 0.8rem;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  white-space: nowrap;
+  animation: chipPop 0.28s cubic-bezier(0.34, 1.5, 0.64, 1) both;
+}
+.quick-reply-chip:hover {
+  background: rgba(0,255,136,0.12);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+.quick-reply-chip:active {
+  transform: scale(0.96);
+}
+
+.typing-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: bounce 1.1s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.18s; }
+.typing-dot:nth-child(3) { animation-delay: 0.36s; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.55em 1.2em;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  font-family: var(--sans);
+}
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary { color: #000; }
+.btn-primary:hover { background: var(--primary-dim); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.btn-success {
+  background: var(--success);
+  color: #fff;
+}
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Input */
+.input {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.65em 0.9em;
+  border-radius: 8px;
+  font-size: 0.95em;
+  font-family: var(--sans);
+  width: 100%;
+  transition: border-color 0.15s;
+  outline: none;
+}
+.input:focus { border-color: var(--primary); }
+.input::placeholder { color: var(--text-muted); }
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.6em;
+  border-radius: 999px;
+  font-size: 0.75em;
+  font-weight: 500;
+  gap: 0.3em;
+}
+.badge-beginner { background: rgba(0,255,136,0.10); color: #00ff88; border: 1px solid rgba(0,255,136,0.25); }
+.badge-intermediate { background: rgba(0,229,255,0.10); color: #00e5ff; border: 1px solid rgba(0,229,255,0.25); }
+.badge-advanced { background: rgba(255,34,68,0.10); color: #ff2244; border: 1px solid rgba(255,34,68,0.25); }
+
+/* Markdown rendered inside the light Kai teaching bubbles */
+.kai-prose p { margin: 0.15em 0; }
+.kai-prose p + p { margin-top: 0.7em; }
+.kai-prose strong { color: #4c1d95; font-weight: 700; }
+.kai-prose em { color: #6d28d9; }
+.kai-prose h1, .kai-prose h2, .kai-prose h3 {
+  color: #312e81;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0.55em 0 0.3em;
+}
+.kai-prose h1 { font-size: 1.3em; }
+.kai-prose h2 { font-size: 1.15em; }
+.kai-prose h3 { font-size: 1.05em; }
+.kai-prose ul, .kai-prose ol {
+  margin: 0.45em 0;
+  padding-left: 1.35em;
+}
+.kai-prose li { margin: 0.2em 0; }
+.kai-prose code {
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
+  border-radius: 5px;
+  color: #5b21b6;
+  font-family: var(--mono);
+  font-size: 0.88em;
+  padding: 0.1em 0.35em;
+}
+.kai-prose pre {
+  background: #1e1b4b;
+  border-radius: 10px;
+  color: #ede9fe;
+  margin: 0.7em 0;
+  overflow-x: auto;
+  padding: 0.85em 1em;
+}
+.kai-prose pre code {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  padding: 0;
+}
+.kai-prose blockquote {
+  border-left: 3px solid #a78bfa;
+  color: #6d28d9;
+  margin: 0.6em 0;
+  padding-left: 0.8em;
+}
+/* your existing CSS above */
+
+
+.shiny-green-text {
+  color: #00ff33;
+  text-shadow:
+    0 0 5px #00ff33,
+    0 0 10px #00ff33,
+    0 0 20px #00ff33;
+
+  animation: greenGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes greenGlow {
+  from {
+    text-shadow:
+      0 0 5px #00ff33,
+      0 0 10px #00ff33,
+      0 0 20px #00ff33;
+  }
+
+  to {
+    text-shadow:
+      0 0 8px #00ff33,
+      0 0 20px #00ff33,
+      0 0 40px #00ff33,
+      0 0 60px rgba(0, 255, 51, 0.5);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Full-bleed layout overrides
+   Makes primary content containers use the full available width and
+   removes empty side margins on desktop and mobile. Use cautiously —
+   overrides use !important so they win over inline styles.
+   ------------------------------------------------------------------ */
+
+#root, html, body, main, section, header, footer, .app, .container, .content, .page, .kai-main-scroll, .kai-content-width {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  box-sizing: border-box;
+}
+
+/* Extra padding on very large viewports so content isn't edge-to-edge */
+@media (min-width: 1200px) {
+  #root, html, body, main, section, header, footer, .app, .container, .content, .page, .kai-main-scroll, .kai-content-width {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+
+/* Reduce horizontal padding on small screens */
+@media (max-width: 480px) {
+  #root, html, body, main, section, header, footer, .app, .container, .content, .page, .kai-main-scroll, .kai-content-width {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}

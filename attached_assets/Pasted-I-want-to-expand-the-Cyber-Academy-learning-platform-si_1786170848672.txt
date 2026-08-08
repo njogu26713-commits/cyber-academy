@@ -1,0 +1,128 @@
+I want to expand the Cyber Academy learning platform significantly.
+
+IMPORTANT: The platform already contains some lessons and learning content. **Do not delete, replace, rename, duplicate, or break any existing lessons.** First inspect the current lesson structure and preserve everything that already exists.
+
+Build the new cybersecurity learning system around the existing lessons.
+
+The goal is to make Cyber Academy an interactive, practical cybersecurity and ethical-hacking learning platform where students learn through:
+
+1. Cybersecurity fundamentals
+2. Networking
+3. Linux and command line
+4. Python for cybersecurity
+5. JavaScript/web technologies for security
+6. APIs and databases
+7. Secure coding
+8. Web security
+9. Ethical hacking concepts
+10. Security analysis
+11. Defensive security
+12. CTF-style challenges
+13. Practical cybersecurity labs
+
+### Coding for Cybersecurity
+
+Add lessons that explain how programming is actually used in cybersecurity.
+
+For example:
+
+* Python for automation
+* Log analysis
+* File analysis
+* Network programming concepts
+* Regular expressions
+* HTTP/API interaction
+* Security scripts
+* Input validation
+* Authentication and authorization
+* Cryptography concepts
+* Secure coding
+
+Each coding lesson should contain:
+
+* Explanation
+* Code example
+* Interactive exercise
+* Quiz/question
+* Practical challenge
+* Hint system
+* XP reward
+
+### Practical Labs
+
+Introduce controlled cybersecurity labs where students practice against intentionally vulnerable applications or simulated environments owned by Cyber Academy.
+
+Examples:
+
+* Analyze suspicious login logs
+* Identify a vulnerable input field
+* Understand an insecure authentication system
+* Investigate HTTP requests
+* Find and fix insecure code
+* Analyze a simulated attack
+* Complete CTF-style challenges
+
+Keep all labs educational and authorized. Do not encourage attacking real systems.
+
+### Kai AI Instructor
+
+Use the existing Kai AI instructor system.
+
+Kai should teach the student progressively rather than simply displaying answers.
+
+Kai should be able to:
+
+* Explain concepts
+* Ask questions
+* Give coding exercises
+* Review submitted code
+* Give hints
+* Explain mistakes
+* Recommend the next lesson
+* Give XP after successful challenges
+* Adapt difficulty based on the student's progress
+
+### Learning progression
+
+Create a clear roadmap such as:
+
+Cyber Foundations
+↓
+Networking
+↓
+Linux
+↓
+Python for Cybersecurity
+↓
+Web Technologies
+↓
+APIs & Databases
+↓
+Secure Coding
+↓
+Web Security
+↓
+Ethical Hacking
+↓
+Defensive Security
+↓
+CTF Arena
+
+However, integrate this with the **existing lessons** instead of creating duplicate versions of topics that are already present.
+
+### Important implementation requirement
+
+Before making changes:
+
+1. Inspect the existing Cyber Academy pages.
+2. Identify all existing lessons.
+3. Preserve their IDs, content, routes, progress tracking, and functionality.
+4. Determine which new topics are already covered.
+5. Only create new lessons where there is a genuine gap.
+6. Connect existing and new lessons into one coherent roadmap.
+7. Make sure existing student progress is not lost.
+8. Do not create duplicate lessons with different names.
+9. Keep the existing visual design unless an improvement is necessary.
+10. Make the new system feel like one unified Cyber Academy.
+
+The result should feel like a serious interactive cybersecurity academy, not just a collection of articles.

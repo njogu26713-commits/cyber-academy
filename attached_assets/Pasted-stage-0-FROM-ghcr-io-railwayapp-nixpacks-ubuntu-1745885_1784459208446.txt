@@ -1,0 +1,99 @@
+stage-0
+FROM ghcr.io/railwayapp/nixpacks:ubuntu-1745885067@sha256:d45c89d80e13d7ad0fd555b5130f22a866d9dd10e861f589932303ef2314c7de
+15ms
+scheduling build on Metal builder "builder-fnfleq"
+unpacking archive
+800 KB
+3ms
+using build driver nixpacks-v1.41.0
+uploading snapshot
+78.5 KB
+ 
+╔═════════════════════ Nixpacks v1.41.0 ═════════════════════╗
+║ setup      │ nodejs_22, npm-9_x                            ║
+║────────────────────────────────────────────────────────────║
+║ caddy      │ pkgs: caddy                                   ║
+║            │ cmds: caddy fmt --overwrite /assets/Caddyfile ║
+║────────────────────────────────────────────────────────────║
+║ install    │ npm ci                                        ║
+║────────────────────────────────────────────────────────────║
+║ build      │ npm install --include=dev && npm run build    ║
+║────────────────────────────────────────────────────────────║
+║ start      │ npm start                                     ║
+╚════════════════════════════════════════════════════════════╝
+ 
+ 
+Saved output to:
+  snapshot-target-unpack
+
+internal
+load build definition from Dockerfile
+0ms
+
+internal
+load metadata for ghcr.io/railwayapp/nixpacks:ubuntu-1745885067
+277ms
+
+internal
+load .dockerignore
+0ms
+SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "GROQ_API_KEY") (line 13)(https://docs.docker.com/go/dockerfile/rule/secrets-used-in-arg-or-env/)
+ details: Sensitive data should not be used in the ARG or ENV commands
+SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SESSION_SECRET") (line 13)(https://docs.docker.com/go/dockerfile/rule/secrets-used-in-arg-or-env/)
+ details: Sensitive data should not be used in the ARG or ENV commands
+SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "GROQ_API_KEY") (line 14)(https://docs.docker.com/go/dockerfile/rule/secrets-used-in-arg-or-env/)
+ details: Sensitive data should not be used in the ARG or ENV commands
+SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "SESSION_SECRET") (line 14)(https://docs.docker.com/go/dockerfile/rule/secrets-used-in-arg-or-env/)
+ details: Sensitive data should not be used in the ARG or ENV commands
+UndefinedVar: Usage of undefined variable '$NIXPACKS_PATH' (line 24)(https://docs.docker.com/go/dockerfile/rule/undefined-var/)
+ details: Variables should be defined before their use
+
+internal
+load build context
+0ms
+
+stage-0
+RUN nix-env -if .nixpacks/nixpkgs-e6f23dc08d3624daab7094b701aa3954923c6bbb.nix && nix-collect-garbage -d cached
+0ms
+
+stage-0
+RUN nix-env -if .nixpacks/nixpkgs-ba913eda2df8eb72147259189d55932012df6301.nix && nix-collect-garbage -d cached
+0ms
+
+stage-0
+COPY .nixpacks/nixpkgs-ba913eda2df8eb72147259189d55932012df6301.nix .nixpacks/nixpkgs-ba913eda2df8eb72147259189d55932012df6301.nix cached
+0ms
+
+stage-0
+WORKDIR /app/ cached
+0ms
+
+stage-0
+COPY .nixpacks/nixpkgs-e6f23dc08d3624daab7094b701aa3954923c6bbb.nix .nixpacks/nixpkgs-e6f23dc08d3624daab7094b701aa3954923c6bbb.nix cached
+0ms
+
+stage-0
+COPY .nixpacks/assets /assets/ cached
+0ms
+
+stage-0
+COPY . /app/.
+323ms
+
+stage-0
+RUN  caddy fmt --overwrite /assets/Caddyfile
+524ms
+
+stage-0
+COPY . /app/.
+174ms
+
+stage-0
+RUN npm ci
+1m 13s
+npm warn config production Use `--omit=dev` instead.
+npm error Exit handler never called!
+npm error This is an error with npm itself. Please report this error at:
+npm error   <https://github.com/npm/cli/issues>
+npm error A complete log of this run can be found in: /root/.npm/_logs/2026-07-19T11_05_01_427Z-debug-0.log
+Build Failed: build daemon returned an error < failed to solve: process "/bin/bash -ol pipefail -c npm ci" did not complete successfully: exit code: 1 >
