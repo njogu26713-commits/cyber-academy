@@ -1,3 +1,4 @@
+```jsx
 import React, { useState, useEffect } from 'react';
 import KaiTeacher from '../components/KaiTeacher.jsx';
 import CourseHome from '../components/CourseHome.jsx';
@@ -21,30 +22,44 @@ const Learn = ({
 
   useEffect(() => {
     let mounted = true;
+
     const load = async () => {
       try {
-        const res = await fetch('/api/curriculum', { credentials: 'include' });
+        const res = await fetch('/api/curriculum', {
+          credentials: 'include',
+        });
+
         if (!res.ok) return;
+
         const data = await res.json();
+
         if (!mounted) return;
+
         setCurriculum(data.curriculum || []);
       } catch (err) {
-        // ignore — fall back to empty curriculum
         console.error('Failed to load curriculum', err);
       } finally {
-        if (mounted) setLoadingCurriculum(false);
+        if (mounted) {
+          setLoadingCurriculum(false);
+        }
       }
     };
+
     load();
-    return () => { mounted = false; };
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  // This is called by CommandsLibrary/CommandsChat with { commandId, prompt }
+  // Ask Kai to explain a command
   const onAskKai = async (params) => {
     try {
       const res = await fetch('/api/chat/explain', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           commandId: params.commandId,
           prompt: params.prompt,
@@ -54,10 +69,14 @@ const Learn = ({
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || `Request failed (${res.status})`);
+
+        throw new Error(
+          data.error || `Request failed (${res.status})`
+        );
       }
 
       const data = await res.json();
+
       return data.reply;
     } catch (error) {
       console.error('Kai explanation error:', error);
@@ -65,16 +84,19 @@ const Learn = ({
     }
   };
 
+  // Open a module
   const handleOpenModule = (module) => {
     setSelectedModule(module);
     setView('module');
   };
 
+  // Return to course home
   const goHome = () => {
     setSelectedModule(null);
     setView('home');
   };
 
+  // Open Commands
   if (view === 'commands') {
     return (
       <CommandsChat
@@ -88,21 +110,21 @@ const Learn = ({
     );
   }
 
+  // Open selected module
   if (view === 'module' && selectedModule) {
     return (
-      ```jsx
-<ModuleDetail
-  module={selectedModule}
-  curriculum={curriculum}
-  progressMap={progress}
-  user={user}
-  onBack={goHome}
-  onLogout={logout}
-/>
-
+      <ModuleDetail
+        module={selectedModule}
+        curriculum={curriculum}
+        progressMap={progress}
+        user={user}
+        onBack={goHome}
+        onLogout={logout}
+      />
     );
   }
 
+  // Open Kai
   if (view === 'kai') {
     return (
       <KaiTeacher
@@ -113,7 +135,7 @@ const Learn = ({
     );
   }
 
-  // While loading curriculum, show CourseHome with empty data so the app doesn't crash
+  // Course home
   return (
     <CourseHome
       curriculum={curriculum}
@@ -129,3 +151,4 @@ const Learn = ({
 };
 
 export default Learn;
+```
