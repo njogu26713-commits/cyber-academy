@@ -223,4 +223,45 @@ router.post('/start', requireAuth, async (req, res) => {
   }
 });
 
+// Explain a command — used by the Commands Library chat
+router.post('/explain', requireAuth, async (req, res) => {
+  const { commandId, prompt } = req.body;
+  if (!commandId || !prompt?.trim())
+    return res.status(400).json({ error: 'commandId and prompt are required.' });
+
+  const openai = getOpenAI();
+  if (!openai) {
+    return res.status(503).json({ error: 'Groq API key not configured.' });
+  }
+
+  const user = await User.findById(req.session.userId).select('username skillLevel');
+
+  const systemPrompt = `You are Kai, the AI cybersecurity instructor at Firebox Cyber Academy. The student is asking about the command "${commandId}".
+
+Answer their question clearly and concisely. Use code blocks for command examples. Keep it friendly and practical. If they ask for more detail, elaborate. If they ask for examples, provide real terminal examples with sample output.
+
+Student: ${user.username}
+Skill level: ${user.skillLevel}
+
+Important: Keep all examples defensive and educational. Never suggest attacking real systems.`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt.trim() },
+      ],
+      max_tokens: 800,
+      temperature: 0.7,
+    });
+
+    const reply = completion.choices[0].message.content;
+    res.json({ reply });
+  } catch (err) {
+    console.error('Explain error:', err.message);
+    res.status(500).json({ error: 'AI is temporarily unavailable. Please try again.' });
+  }
+});
+
 export default router;

@@ -3,6 +3,7 @@ import KaiTeacher from '../components/KaiTeacher.jsx';
 import CourseHome from '../components/CourseHome.jsx';
 import ModuleDetail from '../components/ModuleDetail.jsx';
 import CommandsChat from '../components/CommandsChat.jsx';
+import { commands as ALL_COMMANDS } from '../data/commands';
 
 const Learn = ({
   user,
@@ -38,13 +39,11 @@ const Learn = ({
     return () => { mounted = false; };
   }, []);
 
-  const onAskKai = async (cmd, onProgress) => {
+  const onAskKai = async (cmd) => {
     try {
-      const res = await fetch('/api/kai/explain', {
+      const res = await fetch('/api/chat/explain', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           commandId: cmd.id,
           prompt: cmd.text,
@@ -52,30 +51,13 @@ const Learn = ({
         credentials: 'include',
       });
 
-      if (res.ok && res.body && typeof onProgress === 'function') {
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-
-        while (true) {
-          const { value, done } = await reader.read();
-
-          if (value) {
-            const chunk = decoder.decode(value, {
-              stream: true,
-            });
-
-            onProgress(chunk);
-          }
-
-          if (done) {
-            break;
-          }
-        }
-
-        return;
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Request failed (${res.status})`);
       }
 
-      return await res.text();
+      const data = await res.json();
+      return data.reply;
     } catch (error) {
       console.error('Kai explanation error:', error);
       throw error;
