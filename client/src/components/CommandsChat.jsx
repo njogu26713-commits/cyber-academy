@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../App.jsx';
-import { commands as ALL_COMMANDS } from '../data/commands';
+import { commands as ALL_COMMANDS, CATEGORIES } from '../data/commands';
 
 /* ─────────────────────────────────────────────
    TYPING ANIMATION ENGINE
@@ -138,7 +138,7 @@ function useTypingStream(stream, active) {
    KAI AVATAR
    ───────────────────────────────────────────── */
 
-function KaiAvatar({ mood = 'neutral', size = 120 }) {
+function KaiAvatar({ mood = 'neutral', size = 42 }) {
   const expressions = {
     neutral:   { eyeL: '●', eyeR: '●', mouth: '⌣', brow: '' },
     thinking:  { eyeL: '●', eyeR: '◑', mouth: '〜', brow: '⌢' },
@@ -204,233 +204,6 @@ function ThinkingDots() {
 }
 
 /* ─────────────────────────────────────────────
-   SPEECH BUBBLE
-   ───────────────────────────────────────────── */
-
-function SpeechBubble({ text, cursorVisible, mood, isEmpty, block }) {
-  return (
-    <div style={{ position: 'relative', width: '100%' }}>
-      <div style={{
-        position: 'absolute', top: -13, left: 28, width: 0, height: 0,
-        borderLeft: '11px solid transparent', borderRight: '11px solid transparent',
-        borderBottom: '13px solid #ede9fe', zIndex: 1,
-      }} />
-      <div style={{
-        position: 'absolute', top: -10, left: 29, width: 0, height: 0,
-        borderLeft: '10px solid transparent', borderRight: '10px solid transparent',
-        borderBottom: '11px solid #fff', zIndex: 2,
-      }} />
-
-      <div style={{
-        background: '#fff', border: '2px solid #ede9fe', borderRadius: 24,
-        padding: '24px 32px',
-        boxShadow: '0 4px 24px rgba(124,58,237,0.10), 0 1px 4px rgba(0,0,0,0.06)',
-        minHeight: 80, width: '100%', position: 'relative', transition: 'all 0.2s ease',
-      }}>
-        <div style={{
-          fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: '#7c3aed',
-          textTransform: 'uppercase', marginBottom: 10,
-          display: 'flex', alignItems: 'center', gap: 6,
-        }}>
-          <span style={{
-            width: 8, height: 8, borderRadius: '50%', display: 'inline-block', flexShrink: 0,
-            background: mood === 'thinking' ? '#f59e0b' : mood === 'typing' ? '#10b981' : '#7c3aed',
-            animation: (mood === 'typing' || mood === 'thinking') ? 'cmdDotPulse 1s ease-in-out infinite' : 'none',
-          }} />
-          Kai · AI Instructor
-        </div>
-
-        {isEmpty ? (
-          <ThinkingDots />
-        ) : (
-          <>
-            <p style={{
-              fontSize: 16, lineHeight: 1.7, color: '#1e1b4b', margin: 0,
-              fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 400,
-              whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-            }}>
-              {text}
-              <span style={{
-                display: 'inline-block', width: 2, height: '1.1em', background: '#7c3aed',
-                marginLeft: 2, verticalAlign: 'text-bottom', borderRadius: 1,
-                opacity: cursorVisible ? 1 : 0, transition: 'opacity 0.05s',
-              }} />
-            </p>
-
-            {block && (
-              <div style={{
-                marginTop: 16,
-                background: '#1e1b4b', borderRadius: 14, overflow: 'hidden',
-                border: '1px solid #312e81',
-              }}>
-                <div style={{
-                  padding: '10px 16px', background: 'rgba(124,58,237,0.15)',
-                  borderBottom: '1px solid rgba(124,58,237,0.2)',
-                  display: 'flex', alignItems: 'center', gap: 8,
-                }}>
-                  <span style={{ fontSize: 14 }}>💻</span>
-                  <span style={{ color: '#c4b5fd', fontWeight: 700, fontSize: 13, fontFamily: "'JetBrains Mono', monospace" }}>
-                    {block.syntax}
-                  </span>
-                </div>
-                {block.example && (
-                  <div style={{ padding: '14px 16px' }}>
-                    <div style={{ color: '#a78bfa', fontSize: 12, marginBottom: 8 }}>
-                      {block.example.description}
-                    </div>
-                    <div style={{
-                      color: '#ede9fe', fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 13, marginBottom: 10,
-                    }}>
-                      $ {block.example.command}
-                    </div>
-                    <pre style={{
-                      margin: 0, color: '#94a3b8', fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 12, lineHeight: 1.65, whiteSpace: 'pre-wrap',
-                    }}>
-                      {block.example.output}
-                    </pre>
-                  </div>
-                )}
-              </div>
-            )}
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   HISTORY ITEM (settled messages)
-   ───────────────────────────────────────────── */
-
-function HistoryItem({ role, content, block }) {
-  if (role === 'user') {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16, width: '100%' }}>
-        <div style={{
-          maxWidth: '75%',
-          background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
-          borderRadius: '20px 20px 4px 20px', padding: '12px 18px',
-          color: '#fff', fontSize: 15, lineHeight: 1.65, fontWeight: 400,
-          boxShadow: '0 2px 12px rgba(124,58,237,0.25)',
-        }}>
-          {content}
-        </div>
-        <div style={{
-          width: 34, height: 34, borderRadius: '50%', background: '#e0e7ff',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 16, marginLeft: 10, flexShrink: 0, alignSelf: 'flex-end',
-        }}>
-          🧑‍💻
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ width: '100%', marginBottom: 24 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-        <div style={{
-          width: 42, height: 42, borderRadius: '50%',
-          background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
-          boxShadow: '0 4px 14px rgba(124,58,237,0.22)',
-        }}>
-          ✨
-        </div>
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#312e81' }}>Kai</div>
-          <div style={{ fontSize: 11, color: '#8b7cf6', fontWeight: 500 }}>AI Cybersecurity Instructor</div>
-        </div>
-      </div>
-
-      <div style={{
-        width: '100%', background: '#fff', border: '1.5px solid #ede9fe',
-        borderRadius: 20, padding: '18px 24px', fontSize: 15, lineHeight: 1.7,
-        color: '#1e1b4b', boxShadow: '0 2px 8px rgba(124,58,237,0.07)',
-      }}>
-        <p style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</p>
-
-        {block && (
-          <div style={{
-            marginTop: 16, background: '#1e1b4b', borderRadius: 14, overflow: 'hidden',
-            border: '1px solid #312e81',
-          }}>
-            <div style={{
-              padding: '10px 16px', background: 'rgba(124,58,237,0.15)',
-              borderBottom: '1px solid rgba(124,58,237,0.2)',
-              display: 'flex', alignItems: 'center', gap: 8,
-            }}>
-              <span style={{ fontSize: 14 }}>💻</span>
-              <span style={{ color: '#c4b5fd', fontWeight: 700, fontSize: 13, fontFamily: "'JetBrains Mono', monospace" }}>
-                {block.syntax}
-              </span>
-            </div>
-            {block.example && (
-              <div style={{ padding: '14px 16px' }}>
-                <div style={{ color: '#a78bfa', fontSize: 12, marginBottom: 8 }}>
-                  {block.example.description}
-                </div>
-                <div style={{
-                  color: '#ede9fe', fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 13, marginBottom: 10,
-                }}>
-                  $ {block.example.command}
-                </div>
-                <pre style={{
-                  margin: 0, color: '#94a3b8', fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 12, lineHeight: 1.65, whiteSpace: 'pre-wrap',
-                }}>
-                  {block.example.output}
-                </pre>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   QUICK CHIPS
-   ───────────────────────────────────────────── */
-
-function QuickChips({ onSend, disabled }) {
-  const chips = [
-    'Tell me more 📖',
-    'Give me an example 💡',
-    'Show me the flags ⚙️',
-    "What's next? ➡️",
-  ];
-
-  return (
-    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
-      {chips.map(c => (
-        <button
-          key={c}
-          onClick={() => onSend(c)}
-          disabled={disabled}
-          style={{
-            padding: '6px 14px', borderRadius: 20, border: '1.5px solid #ede9fe',
-            background: '#fff', color: '#7c3aed', fontSize: 13, fontWeight: 500,
-            cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.5 : 1,
-            transition: 'all 0.15s', fontFamily: 'inherit',
-            boxShadow: '0 1px 4px rgba(124,58,237,0.08)',
-          }}
-          onMouseEnter={e => { if (!disabled) e.currentTarget.style.background = '#f5f3ff'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; }}
-        >
-          {c}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────
    STYLES
    ───────────────────────────────────────────── */
 
@@ -486,7 +259,7 @@ function CmdKaiStyles() {
 }
 
 /* ─────────────────────────────────────────────
-   MAIN COMPONENT
+   MAIN COMPONENT - Full-screen conversational UI
    ───────────────────────────────────────────── */
 
 export default function CommandsChat({
@@ -500,101 +273,58 @@ export default function CommandsChat({
   const auth = useAuth();
   const user = propUser || auth?.user;
 
-  const [selectedCmdId, setSelectedCmdId] = useState(ALL_COMMANDS[0]?.id || '');
   const [history, setHistory] = useState([]);
   const [streaming, setStreaming] = useState('');
   const [stream, setStream] = useState([]);
-  const [streamBlock, setStreamBlock] = useState(null);
   const [phase, setPhase] = useState('idle');
   const [input, setInput] = useState('');
   const [mood, setMood] = useState('happy');
   const [sendError, setSendError] = useState(null);
-  const [started, setStarted] = useState(false);
+  const [conversationStarted, setConversationStarted] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
-  const pillsRef = useRef(null);
 
   const { displayed, cursorVisible, done: typingDone } = useTypingStream(stream, phase === 'typing');
 
-  const cmd = ALL_COMMANDS.find(c => c.id === selectedCmdId) || ALL_COMMANDS[0];
-  const isLearned = learnedCommands.includes(cmd.id);
-  const totalXP = learnedCommands.reduce((sum, id) => {
-    const c = ALL_COMMANDS.find(cmd => cmd.id === id);
-    return sum + (c?.xp || 0);
-  }, 0);
+  // Get unique categories, including 'All' at the start
+  const categoryOptions = ['All', ...Array.from(new Set(ALL_COMMANDS.map(c => c.category)))];
+
+  // Initial greeting messages
+  const initialGreeting = "Hi! 👋 I'm Kai, your cybersecurity command assistant. Tell me what command you're looking for and I'll guide you.";
+
+  const suggestions = [
+    'How do I find my IP address?',
+    'Show me basic Linux commands',
+    'How do I scan a network?',
+    'Explain the ls command',
+    'What command checks open ports?',
+  ];
 
   /* Settle typed message */
   useEffect(() => {
     if (typingDone && phase === 'typing' && streaming) {
-      setHistory(h => [...h, { role: 'assistant', content: streaming, block: streamBlock }]);
+      setHistory(h => [...h, { role: 'assistant', content: streaming }]);
       setStreaming('');
       setStream([]);
-      setStreamBlock(null);
       setPhase('done');
       setMood('listening');
     }
-  }, [typingDone, phase, streaming, streamBlock]);
+  }, [typingDone, phase, streaming]);
 
   /* Auto scroll */
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [history, displayed, phase]);
 
-  const beginTyping = useCallback((text, block = null) => {
+  const beginTyping = useCallback((text) => {
     const s = buildTypingStream(text);
     setStreaming(text);
     setStream(s);
-    setStreamBlock(block);
     setPhase('typing');
     setMood('typing');
   }, []);
-
-  /* Seed initial Kai message on mount */
-  useEffect(() => {
-    if (started || !cmd) return;
-    setStarted(true);
-    const intro = `Let's learn ${cmd.name} together! ${cmd.description}`;
-    const block = {
-      syntax: cmd.syntax,
-      example: cmd.examples?.[0] || null,
-    };
-    setPhase('loading');
-    setMood('thinking');
-    const timer = setTimeout(() => beginTyping(intro, block), 800);
-    return () => clearTimeout(timer);
-  }, [started, cmd, beginTyping]);
-
-  /* Scroll selected pill into view */
-  useEffect(() => {
-    const container = pillsRef.current;
-    if (!container) return;
-    const active = container.querySelector('[data-active="true"]');
-    if (active) {
-      active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    }
-  }, [selectedCmdId]);
-
-  const handleSelectCommand = useCallback((id) => {
-    const newCmd = ALL_COMMANDS.find(c => c.id === id);
-    if (!newCmd) return;
-    setSelectedCmdId(id);
-    setSendError(null);
-    const intro = `Let's learn ${newCmd.name}! ${newCmd.description}`;
-    const block = {
-      syntax: newCmd.syntax,
-      example: newCmd.examples?.[0] || null,
-    };
-    setPhase('loading');
-    setMood('thinking');
-    setTimeout(() => beginTyping(intro, block), 600);
-  }, [beginTyping]);
-
-  const handleNext = useCallback(() => {
-    const idx = ALL_COMMANDS.findIndex(c => c.id === selectedCmdId);
-    const next = ALL_COMMANDS[(idx + 1) % ALL_COMMANDS.length];
-    handleSelectCommand(next.id);
-  }, [selectedCmdId, handleSelectCommand]);
 
   const sendMessage = useCallback(async (text) => {
     const msg = (text || input).trim();
@@ -602,6 +332,7 @@ export default function CommandsChat({
 
     setInput('');
     setHistory(h => [...h, { role: 'user', content: msg }]);
+    setConversationStarted(true);
     setPhase('loading');
     setMood('thinking');
     setSendError(null);
@@ -609,7 +340,7 @@ export default function CommandsChat({
     try {
       if (typeof onAskKai === 'function') {
         let fullText = '';
-        const maybePromise = onAskKai({ id: selectedCmdId, text: msg }, (chunk) => {
+        const maybePromise = onAskKai({ text: msg }, (chunk) => {
           if (!chunk) return;
           fullText += chunk;
         });
@@ -617,18 +348,15 @@ export default function CommandsChat({
         const result = maybePromise && typeof maybePromise.then === 'function' ? await maybePromise : maybePromise;
 
         if (typeof result === 'string') {
-          beginTyping(result, null);
+          beginTyping(result);
         } else if (fullText) {
-          beginTyping(fullText, null);
+          beginTyping(fullText);
         } else {
           throw new Error('No response received');
         }
       } else {
-        const c = ALL_COMMANDS.find(cmd => cmd.id === selectedCmdId);
-        const reply = c
-          ? `Great question about ${c.name}! ${c.purpose} The syntax is \`${c.syntax}\`. Try running the example and see what output you get — hands-on practice is the best way to learn!`
-          : "I'm here to help you master cybersecurity commands. What would you like to know?";
-        setTimeout(() => beginTyping(reply, null), 600);
+        const reply = `That's a great question! I'm here to help you master cybersecurity commands. Keep asking and I'll guide you through the concepts step by step.`;
+        setTimeout(() => beginTyping(reply), 600);
       }
     } catch (err) {
       console.error('sendMessage error:', err);
@@ -638,7 +366,7 @@ export default function CommandsChat({
       setPhase('done');
       setMood('neutral');
     }
-  }, [input, phase, onAskKai, selectedCmdId, beginTyping]);
+  }, [input, phase, onAskKai, beginTyping]);
 
   const handleKey = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -647,8 +375,7 @@ export default function CommandsChat({
     }
   };
 
-  const busy = phase === 'loading' || phase === 'typing' || phase === 'error';
-  const showBubble = phase === 'loading' || phase === 'typing';
+  const busy = phase === 'loading' || phase === 'typing';
 
   return (
     <div style={{
@@ -701,29 +428,7 @@ export default function CommandsChat({
           </div>
         </div>
 
-        <div style={{ textAlign: 'center', flex: 1, padding: '0 16px', minWidth: 0 }}>
-          <div style={{
-            fontSize: 11, color: '#8b7cf6', fontWeight: 600, letterSpacing: '0.06em',
-            textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-          }}>
-            {cmd?.category}
-          </div>
-          <div style={{
-            fontSize: 14, color: '#1e1b4b', fontWeight: 600, marginTop: 1,
-            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-            fontFamily: "'JetBrains Mono', monospace",
-          }}>
-            {cmd?.name}
-          </div>
-        </div>
-
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-          <div style={{
-            padding: '6px 14px', borderRadius: 20, background: '#f5f3ff',
-            border: '1.5px solid #ede9fe', fontSize: 13, color: '#7c3aed', fontWeight: 600,
-          }}>
-            ⚡ {totalXP} XP
-          </div>
           <div className="cmd-user-pill" style={{
             padding: '6px 14px', borderRadius: 20, background: '#f5f3ff',
             border: '1.5px solid #ede9fe', fontSize: 13, color: '#7c3aed', fontWeight: 500,
@@ -744,95 +449,184 @@ export default function CommandsChat({
       </header>
 
       {/* ─────────────────────────────────────
-          COMMAND PILLS ROW
+          CATEGORY TABS
       ───────────────────────────────────── */}
       <div style={{
         background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(8px)',
         borderBottom: '1px solid #ede9fe', padding: '10px 24px',
         display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, zIndex: 9,
+        overflowX: 'auto',
       }}>
-        <div style={{
-          fontSize: 11, fontWeight: 700, color: '#8b7cf6', letterSpacing: '0.08em',
-          textTransform: 'uppercase', flexShrink: 0, marginRight: 4,
-        }}>
-          Commands
-        </div>
-        <div ref={pillsRef} className="cmd-pills-scroll" style={{
-          display: 'flex', gap: 8, alignItems: 'center', overflowX: 'auto', flex: 1,
-        }}>
-          {ALL_COMMANDS.map(c => {
-            const active = c.id === selectedCmdId;
-            const learned = learnedCommands.includes(c.id);
-            return (
-              <button
-                key={c.id}
-                data-active={active}
-                onClick={() => handleSelectCommand(c.id)}
-                style={{
-                  padding: '7px 14px', borderRadius: 20, border: active
-                    ? '2px solid #7c3aed'
-                    : '1.5px solid #ede9fe',
-                  background: active ? '#f5f3ff' : '#fff',
-                  color: active ? '#7c3aed' : '#6b7280',
-                  fontSize: 13, fontWeight: active ? 700 : 600, whiteSpace: 'nowrap',
-                  cursor: 'pointer', fontFamily: "'JetBrains Mono', monospace",
-                  transition: 'all 0.15s', flexShrink: 0,
-                  display: 'flex', alignItems: 'center', gap: 5,
-                }}
-              >
-                {c.name}
-                {learned && <span style={{ fontSize: 10, color: '#10b981' }}>✓</span>}
-              </button>
-            );
-          })}
-        </div>
-
-        <button
-          onClick={() => onToggleLearned(cmd.id)}
-          style={{
-            padding: '7px 14px', borderRadius: 10, flexShrink: 0,
-            background: isLearned ? '#dcfce7' : '#f5f3ff',
-            border: '1.5px solid ' + (isLearned ? '#86efac' : '#ede9fe'),
-            color: isLearned ? '#166534' : '#7c3aed',
-            fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
-            transition: 'all 0.15s', whiteSpace: 'nowrap',
-          }}
-        >
-          {isLearned ? '✓ Learned' : 'Mark Learned'}
-        </button>
-
-        <button
-          onClick={handleNext}
-          disabled={busy}
-          style={{
-            padding: '7px 14px', borderRadius: 10, flexShrink: 0,
-            background: busy ? '#e0d9f9' : 'linear-gradient(135deg, #7c3aed, #4f46e5)',
-            border: 'none', color: '#fff', fontSize: 12, fontWeight: 700,
-            cursor: busy ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
-            transition: 'all 0.15s', whiteSpace: 'nowrap',
-            boxShadow: busy ? 'none' : '0 2px 10px rgba(124,58,237,0.25)',
-          }}
-        >
-          Next →
-        </button>
+        {categoryOptions.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            style={{
+              padding: '7px 14px', borderRadius: 20, border: selectedCategory === cat
+                ? '2px solid #7c3aed'
+                : '1.5px solid #ede9fe',
+              background: selectedCategory === cat ? '#f5f3ff' : '#fff',
+              color: selectedCategory === cat ? '#7c3aed' : '#6b7280',
+              fontSize: 13, fontWeight: selectedCategory === cat ? 700 : 600, whiteSpace: 'nowrap',
+              cursor: 'pointer', fontFamily: 'inherit',
+              transition: 'all 0.15s', flexShrink: 0,
+            }}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
       {/* ─────────────────────────────────────
-          FULL-WIDTH MAIN AREA
+          MAIN CHAT AREA
       ───────────────────────────────────── */}
       <div className="cmd-main-scroll" style={{
-        flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '32px 0 20px', width: '100%',
+        flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '32px 24px 20px', width: '100%', maxWidth: '100%',
       }}>
-        <div style={{ width: '100%', margin: '0 auto' }}>
-          {/* History */}
+        <div style={{ width: '100%', margin: '0 auto', maxWidth: '800px' }}>
+          {/* Initial greeting if no conversation started */}
+          {!conversationStarted && history.length === 0 && (
+            <>
+              {/* Kai greeting with icon and message bubble */}
+              <div style={{ marginBottom: 32, animation: 'cmdFadeSlide 0.4s ease' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, marginBottom: 12 }}>
+                  <KaiAvatar mood="happy" size={42} />
+                  <div style={{
+                    background: '#fff', border: '2px solid #ede9fe', borderRadius: 24,
+                    padding: '16px 20px',
+                    boxShadow: '0 4px 24px rgba(124,58,237,0.10), 0 1px 4px rgba(0,0,0,0.06)',
+                    maxWidth: '85%',
+                  }}>
+                    <p style={{
+                      fontSize: 15, lineHeight: 1.6, color: '#1e1b4b', margin: 0,
+                      fontWeight: 400,
+                    }}>
+                      {initialGreeting}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Try asking suggestions */}
+              <div style={{ marginBottom: 32 }}>
+                <div style={{
+                  fontSize: 13, fontWeight: 700, color: '#8b7cf6', textTransform: 'uppercase',
+                  letterSpacing: '0.08em', marginBottom: 12,
+                }}>
+                  Try asking:
+                </div>
+                <div style={{
+                  display: 'grid', gap: 10,
+                }}>
+                  {suggestions.map((suggestion, i) => (
+                    <button
+                      key={i}
+                      onClick={() => sendMessage(suggestion)}
+                      style={{
+                        width: '100%', textAlign: 'left', padding: '12px 16px', borderRadius: 12,
+                        border: '1.5px solid #ede9fe', background: '#fff', color: '#1e1b4b',
+                        fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit',
+                        transition: 'all 0.15s',
+                        boxShadow: '0 1px 4px rgba(124,58,237,0.08)',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#f5f3ff'; e.currentTarget.style.borderColor = '#7c3aed'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#ede9fe'; }}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* History messages */}
           {history.map((msg, i) => (
-            <HistoryItem
-              key={i}
-              role={msg.role}
-              content={msg.content}
-              block={msg.block}
-            />
+            <div key={i} style={{ marginBottom: msg.role === 'user' ? 16 : 24, animation: 'cmdFadeSlide 0.3s ease' }}>
+              {msg.role === 'user' ? (
+                /* User message */
+                <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                  <div style={{
+                    maxWidth: '75%',
+                    background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
+                    borderRadius: '20px 20px 4px 20px', padding: '12px 18px',
+                    color: '#fff', fontSize: 15, lineHeight: 1.65, fontWeight: 400,
+                    boxShadow: '0 2px 12px rgba(124,58,237,0.25)',
+                  }}>
+                    {msg.content}
+                  </div>
+                  <div style={{
+                    width: 34, height: 34, borderRadius: '50%', background: '#e0e7ff',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 16, marginLeft: 10, flexShrink: 0, alignSelf: 'flex-end',
+                  }}>
+                    🧑‍💻
+                  </div>
+                </div>
+              ) : (
+                /* Assistant message */
+                <div style={{ width: '100%' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                    <KaiAvatar mood="happy" size={34} />
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#312e81' }}>Kai</div>
+                      <div style={{ fontSize: 11, color: '#8b7cf6', fontWeight: 500 }}>AI Cybersecurity Instructor</div>
+                    </div>
+                  </div>
+                  <div style={{
+                    width: '100%', background: '#fff', border: '1.5px solid #ede9fe',
+                    borderRadius: 20, padding: '18px 24px', fontSize: 15, lineHeight: 1.7,
+                    color: '#1e1b4b', boxShadow: '0 2px 8px rgba(124,58,237,0.07)',
+                  }}>
+                    <p style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{msg.content}</p>
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
+
+          {/* Kai typing bubble */}
+          {(phase === 'loading' || phase === 'typing') && (
+            <div style={{ width: '100%', marginBottom: 28, animation: 'cmdFadeSlide 0.3s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                <KaiAvatar mood={phase === 'typing' ? 'typing' : 'thinking'} size={34} />
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#312e81' }}>Kai</div>
+                  <div style={{ fontSize: 11, color: '#8b7cf6', fontWeight: 500 }}>AI Cybersecurity Instructor</div>
+                </div>
+                {phase === 'typing' && (
+                  <span style={{ fontSize: 18, animation: 'cmdHandWave 1.5s ease-in-out infinite', marginLeft: 'auto' }}>✍️</span>
+                )}
+                {phase === 'loading' && (
+                  <span style={{ fontSize: 18, animation: 'cmdThinking 2s ease-in-out infinite', marginLeft: 'auto' }}>💭</span>
+                )}
+              </div>
+
+              <div style={{
+                background: '#fff', border: '2px solid #ede9fe', borderRadius: 24,
+                padding: '24px 32px',
+                boxShadow: '0 4px 24px rgba(124,58,237,0.10), 0 1px 4px rgba(0,0,0,0.06)',
+                minHeight: 80, width: '100%', position: 'relative', transition: 'all 0.2s ease',
+              }}>
+                {phase === 'loading' ? (
+                  <ThinkingDots />
+                ) : (
+                  <p style={{
+                    fontSize: 16, lineHeight: 1.7, color: '#1e1b4b', margin: 0,
+                    fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 400,
+                    whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                  }}>
+                    {displayed}
+                    <span style={{
+                      display: 'inline-block', width: 2, height: '1.1em', background: '#7c3aed',
+                      marginLeft: 2, verticalAlign: 'text-bottom', borderRadius: 1,
+                      opacity: cursorVisible ? 1 : 0, transition: 'opacity 0.05s',
+                    }} />
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Send error */}
           {sendError && (
@@ -855,35 +649,6 @@ export default function CommandsChat({
             </div>
           )}
 
-          {/* Kai current teaching message */}
-          {showBubble && (
-            <div style={{ width: '100%', marginBottom: 28, animation: 'cmdFadeSlide 0.3s ease' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12, paddingLeft: 4 }}>
-                <KaiAvatar mood={mood} size={62} />
-                <div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: '#312e81' }}>Kai</div>
-                  <div style={{ fontSize: 11, color: '#8b7cf6', fontWeight: 600, marginTop: 1 }}>
-                    AI Cybersecurity Instructor
-                  </div>
-                </div>
-                {phase === 'typing' && (
-                  <span style={{ fontSize: 20, animation: 'cmdHandWave 1.5s ease-in-out infinite' }}>✍️</span>
-                )}
-                {phase === 'loading' && (
-                  <span style={{ fontSize: 20, animation: 'cmdThinking 2s ease-in-out infinite' }}>💭</span>
-                )}
-              </div>
-
-              <SpeechBubble
-                text={displayed}
-                cursorVisible={cursorVisible}
-                mood={mood}
-                isEmpty={phase === 'loading'}
-                block={phase === 'typing' && typingDone ? streamBlock : null}
-              />
-            </div>
-          )}
-
           <div ref={bottomRef} />
         </div>
       </div>
@@ -893,35 +658,9 @@ export default function CommandsChat({
       ───────────────────────────────────── */}
       <div style={{
         background: 'rgba(255,255,255,0.94)', backdropFilter: 'blur(12px)',
-        borderTop: '1px solid #ede9fe', padding: '16px 0 20px', flexShrink: 0, width: '100%',
+        borderTop: '1px solid #ede9fe', padding: '16px 24px 20px', flexShrink: 0, width: '100%',
       }}>
-        <div style={{ width: '100%', margin: '0 auto' }}>
-          {/* Command meta row */}
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap',
-          }}>
-            <span style={{
-              padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700,
-              background: '#f5f3ff', color: '#7c3aed', border: '1px solid #ddd6fe',
-            }}>
-              {cmd?.difficulty}
-            </span>
-            <span style={{
-              padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600,
-              background: '#fff', color: '#6b7280', border: '1px solid #e5e7eb',
-            }}>
-              ⏱ {cmd?.estimatedTime}
-            </span>
-            <span style={{
-              padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700,
-              background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0',
-            }}>
-              ⚡ {cmd?.xp} XP
-            </span>
-          </div>
-
-          <QuickChips onSend={sendMessage} disabled={busy} />
-
+        <div style={{ width: '100%', margin: '0 auto', maxWidth: '800px' }}>
           <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', width: '100%' }}>
             <textarea
               ref={inputRef}
@@ -929,7 +668,7 @@ export default function CommandsChat({
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKey}
               disabled={busy}
-              placeholder={busy ? 'Kai is typing…' : `Ask Kai about ${cmd?.name}…`}
+              placeholder={busy ? 'Kai is typing…' : 'Ask Kai about commands…'}
               rows={1}
               style={{
                 flex: 1, resize: 'none', borderRadius: 16,
