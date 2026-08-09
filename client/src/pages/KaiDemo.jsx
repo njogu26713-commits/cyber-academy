@@ -806,4 +806,5 @@ function DemoStyles() {
     "}"
   ].join('\n');
 
-  return <style dangerouslySetInnerHTML={{ __html: css }} />;
+  return React.createElement('style', null, css);
+}
