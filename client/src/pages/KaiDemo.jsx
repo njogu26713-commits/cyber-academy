@@ -616,10 +616,11 @@ function DemoStyles() {
     "  background: #020403 !important;",
     "}",
     "",
-    ".kai-content-width {",
-    "  width: 100% !important;",
-    "  max-width: 1080px !important;",
-    "}",
+    .kai-content-width {
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 !important;
+    ""}
     "",
     "@media (max-width: 600px) {",
     "  header {",
