@@ -33,9 +33,12 @@ export default function App() {
   };
 
   const logout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-    setUser(null);
-    setPage('landing');
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    } finally {
+      setUser(null);
+      setPage('landing');
+    }
   };
 
   if (loading) return (
