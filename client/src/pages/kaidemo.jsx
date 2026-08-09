@@ -181,7 +181,7 @@ function KaiAvatar({ mood = 'neutral', size = 100 }) {
 
 function Bubble({ text, cursor, isThinking }) {
   return (
-    <div style={{ position: 'relative', width: '100%', maxWidth: 900, minWidth: 220 }}>
+    <div className="kai-bubble-mobile" style={{ position: 'relative', width: '100%', maxWidth: 900, minWidth: 220 }}>
       <div style={{
         background: '#fff',
         border: '2px solid #ede9fe',
@@ -396,9 +396,9 @@ export default function KaiDemo({ onGetStarted }) {
   const busy = phase === 'thinking' || phase === 'typing';
 
   return (
-    <div style={{
+    <div className="kai-dark-theme" style={{
       display: 'flex', flexDirection: 'column', height: '100vh',
-      background: 'linear-gradient(160deg, #f8f7ff 0%, #eff6ff 50%, #fdf4ff 100%)',
+      background: '#020403',
       fontFamily: "'Inter', system-ui, sans-serif", overflow: 'hidden',
     }}>
       <DemoStyles />
@@ -607,6 +607,203 @@ function DemoStyles() {
         0%,100%{ opacity:0.6; transform:scale(1)   translateY(0);   }
         50%    { opacity:1;   transform:scale(1.1) translateY(-3px); }
       }
+
+/* ─────────────────────────────────────────────
+   BLACK + NEON GREEN MOBILE OVERRIDES
+   ───────────────────────────────────────────── */
+
+html, body, #root {
+  background: #020403 !important;
+}
+
+.kai-content-width {
+  width: 100% !important;
+  max-width: 1080px !important;
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 10px 12px !important;
+    height: 58px !important;
+  }
+
+  header > div:nth-child(2) {
+    display: none !important;
+  }
+
+  header button {
+    padding: 8px 11px !important;
+    font-size: 10px !important;
+  }
+
+  header > div:first-child > div:first-child {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 16px !important;
+  }
+
+  header > div:first-child > div:last-child > div:first-child {
+    font-size: 12px !important;
+  }
+
+  header > div:first-child > div:last-child > div:last-child {
+    font-size: 7px !important;
+  }
+
+  .messages-area {
+    padding: 18px 10px 12px !important;
+  }
+
+  .messages-area > div {
+    max-width: 100% !important;
+  }
+
+  .live-kai {
+    gap: 9px !important;
+  }
+
+  .live-kai > div:first-child {
+    width: 46px !important;
+  }
+
+  .live-kai > div:first-child > div:first-child {
+    width: 46px !important;
+    height: 46px !important;
+  }
+
+  .live-kai > div:nth-child(2) {
+    min-width: 0 !important;
+  }
+
+  .kai-bubble-mobile {
+    max-width: 100% !important;
+  }
+
+  textarea {
+    font-size: 13px !important;
+  }
+}
+
+/* Global dark theme */
+.kai-dark-theme {
+  background:
+    radial-gradient(circle at 50% -15%, rgba(0,255,120,.09), transparent 36%),
+    radial-gradient(circle at 100% 55%, rgba(0,255,120,.035), transparent 32%),
+    #020403 !important;
+  color: #d8ffe6 !important;
+}
+
+.kai-dark-theme * {
+  scrollbar-color: rgba(0,255,120,.25) transparent;
+}
+
+.kai-dark-theme header {
+  background: rgba(2,7,4,.94) !important;
+  border-bottom: 1px solid rgba(0,255,120,.14) !important;
+  box-shadow: 0 1px 28px rgba(0,255,120,.045) !important;
+}
+
+.kai-dark-theme header > div:first-child > div:first-child {
+  background: linear-gradient(135deg,#00ff88,#00b85d) !important;
+  box-shadow: 0 0 18px rgba(0,255,120,.24) !important;
+  color: #001b0b !important;
+}
+
+.kai-dark-theme header > div:first-child > div:last-child > div:first-child {
+  color: #effff5 !important;
+}
+
+.kai-dark-theme header > div:first-child > div:last-child > div:last-child {
+  color: #45a96d !important;
+}
+
+.kai-dark-theme header > div:nth-child(2) {
+  background: rgba(0,255,120,.035) !important;
+  border-color: rgba(0,255,120,.13) !important;
+}
+
+.kai-dark-theme header > div:nth-child(2) span:first-child {
+  color: #00ff88 !important;
+}
+
+.kai-dark-theme header button {
+  background: linear-gradient(135deg,#00ff88,#00c968) !important;
+  color: #00170a !important;
+  box-shadow: 0 0 18px rgba(0,255,120,.2) !important;
+}
+
+.kai-dark-theme .kai-bubble {
+  background: linear-gradient(145deg,#07130c,#030a06) !important;
+  border-color: rgba(0,255,120,.18) !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(0,255,120,.04) !important;
+}
+
+.kai-dark-theme .kai-bubble p {
+  color: #c8fbd9 !important;
+}
+
+.kai-dark-theme .kai-bubble-header {
+  color: #00ff88 !important;
+}
+
+.kai-dark-theme .settled-kai-bubble {
+  background: rgba(5,15,9,.82) !important;
+  border-color: rgba(0,255,120,.1) !important;
+  color: #9ad9af !important;
+}
+
+.kai-dark-theme .student-bubble {
+  background: linear-gradient(135deg,#00ff88,#00c968) !important;
+  color: #00170a !important;
+  box-shadow: 0 5px 20px rgba(0,255,120,.15) !important;
+}
+
+.kai-dark-theme .student-avatar {
+  background: #0b190f !important;
+  border-color: rgba(0,255,120,.12) !important;
+}
+
+.kai-dark-theme .kai-content-width > div:last-child {
+  color: #4a7d5c !important;
+}
+
+.kai-dark-theme > div:last-child {
+  background: rgba(2,8,5,.97) !important;
+  border-top-color: rgba(0,255,120,.13) !important;
+  box-shadow: 0 -10px 40px rgba(0,0,0,.35) !important;
+}
+
+.kai-dark-theme > div:last-child button {
+  border-color: rgba(0,255,120,.14) !important;
+  background: rgba(0,255,120,.025) !important;
+  color: #79c795 !important;
+}
+
+.kai-dark-theme > div:last-child textarea {
+  background: #030a06 !important;
+  color: #c9ffda !important;
+  border-color: rgba(0,255,120,.2) !important;
+  box-shadow: inset 0 0 18px rgba(0,255,120,.025) !important;
+}
+
+.kai-dark-theme > div:last-child textarea::placeholder {
+  color: #355942 !important;
+}
+
+.kai-dark-theme > div:last-child > div > div:last-child button {
+  background: linear-gradient(135deg,#00ff88,#00c968) !important;
+  color: #00170a !important;
+  border: none !important;
+  box-shadow: 0 0 14px rgba(0,255,120,.2) !important;
+}
+
+/* Shiny green text */
+.kai-shiny-green {
+  color: #00ff88 !important;
+  text-shadow:
+    0 0 5px rgba(0,255,120,.55),
+    0 0 12px rgba(0,255,120,.28);
+}
+
     `}</style>
   );
-}
