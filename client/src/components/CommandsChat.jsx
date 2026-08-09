@@ -481,31 +481,71 @@ export default function CommandsChat({
           </button>
         ))}
       </div>
-
-      {/* ─────────────────────────────────────
-          MAIN CHAT AREA
-      ───────────────────────────────────── */}
-      <div className="cmd-main-scroll" style={{
-        flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '32px 24px 20px', width: '100%', maxWidth: '100%',
-      }}>
-        <div style={{ width: '100%', margin: '0 auto', maxWidth: '800px' }}>
+      {/* MAIN CHAT AREA
+        ───────────────────────────────────── */}
+      <div
+        className="cmd-main-scroll"
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          padding: '32px 0 20px',
+          width: '100%',
+          maxWidth: '100%',
+          boxSizing: 'border-box',
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            margin: 0,
+            maxWidth: 'none',
+            boxSizing: 'border-box',
+          }}
+        >
           {/* Initial greeting if no conversation started */}
           {!conversationStarted && history.length === 0 && (
             <>
               {/* Kai greeting with icon and message bubble */}
-              <div style={{ marginBottom: 32, animation: 'cmdFadeSlide 0.4s ease' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, marginBottom: 12 }}>
+              <div
+                style={{
+                  marginBottom: 32,
+                  animation: 'cmdFadeSlide 0.4s ease',
+                  width: '100%',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    gap: 12,
+                    marginBottom: 12,
+                    width: '100%',
+                  }}
+                >
                   <KaiAvatar mood="happy" size={42} />
-                  <div style={{
-                    background: '#fff', border: '2px solid #ede9fe', borderRadius: 24,
-                    padding: '16px 20px',
-                    boxShadow: '0 4px 24px rgba(124,58,237,0.10), 0 1px 4px rgba(0,0,0,0.06)',
-                    maxWidth: '85%',
-                  }}>
-                    <p style={{
-                      fontSize: 15, lineHeight: 1.6, color: '#1e1b4b', margin: 0,
-                      fontWeight: 400,
-                    }}>
+
+                  <div
+                    style={{
+                      background: '#fff',
+                      border: '2px solid #ede9fe',
+                      borderRadius: 24,
+                      padding: '16px 20px',
+                      boxShadow:
+                        '0 4px 24px rgba(124,58,237,0.10), 0 1px 4px rgba(0,0,0,0.06)',
+                      maxWidth: '85%',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: 15,
+                        lineHeight: 1.6,
+                        color: '#1e1b4b',
+                        margin: 0,
+                        fontWeight: 400,
+                      }}
+                    >
                       {initialGreeting}
                     </p>
                   </div>
@@ -513,29 +553,60 @@ export default function CommandsChat({
               </div>
 
               {/* Try asking suggestions */}
-              <div style={{ marginBottom: 32 }}>
-                <div style={{
-                  fontSize: 13, fontWeight: 700, color: '#8b7cf6', textTransform: 'uppercase',
-                  letterSpacing: '0.08em', marginBottom: 12,
-                }}>
+              <div
+                style={{
+                  marginBottom: 32,
+                  width: '100%',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: '#8b7cf6',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    marginBottom: 12,
+                  }}
+                >
                   Try asking:
                 </div>
-                <div style={{
-                  display: 'grid', gap: 10,
-                }}>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gap: 10,
+                    width: '100%',
+                  }}
+                >
                   {suggestions.map((suggestion, i) => (
                     <button
                       key={i}
                       onClick={() => sendMessage(suggestion)}
                       style={{
-                        width: '100%', textAlign: 'left', padding: '12px 16px', borderRadius: 12,
-                        border: '1.5px solid #ede9fe', background: '#fff', color: '#1e1b4b',
-                        fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit',
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '12px 16px',
+                        borderRadius: 12,
+                        border: '1.5px solid #ede9fe',
+                        background: '#fff',
+                        color: '#1e1b4b',
+                        fontSize: 13,
+                        fontWeight: 500,
+                        cursor: 'pointer',
+                        fontFamily: 'inherit',
                         transition: 'all 0.15s',
                         boxShadow: '0 1px 4px rgba(124,58,237,0.08)',
+                        boxSizing: 'border-box',
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.background = '#f5f3ff'; e.currentTarget.style.borderColor = '#7c3aed'; }}
-                      onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#ede9fe'; }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#f5f3ff';
+                        e.currentTarget.style.borderColor = '#7c3aed';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#fff';
+                        e.currentTarget.style.borderColor = '#ede9fe';
+                      }}
                     >
                       {suggestion}
                     </button>
@@ -547,43 +618,121 @@ export default function CommandsChat({
 
           {/* History messages */}
           {history.map((msg, i) => (
-            <div key={i} style={{ marginBottom: msg.role === 'user' ? 16 : 24, animation: 'cmdFadeSlide 0.3s ease' }}>
+            <div
+              key={i}
+              style={{
+                marginBottom: msg.role === 'user' ? 16 : 24,
+                animation: 'cmdFadeSlide 0.3s ease',
+                width: '100%',
+              }}
+            >
               {msg.role === 'user' ? (
                 /* User message */
-                <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                  <div style={{
-                    maxWidth: '75%',
-                    background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
-                    borderRadius: '20px 20px 4px 20px', padding: '12px 18px',
-                    color: '#fff', fontSize: 15, lineHeight: 1.65, fontWeight: 400,
-                    boxShadow: '0 2px 12px rgba(124,58,237,0.25)',
-                  }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    width: '100%',
+                  }}
+                >
+                  <div
+                    style={{
+                      maxWidth: '75%',
+                      background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
+                      borderRadius: '20px 20px 4px 20px',
+                      padding: '12px 18px',
+                      color: '#fff',
+                      fontSize: 15,
+                      lineHeight: 1.65,
+                      fontWeight: 400,
+                      boxShadow: '0 2px 12px rgba(124,58,237,0.25)',
+                      boxSizing: 'border-box',
+                    }}
+                  >
                     {msg.content}
                   </div>
-                  <div style={{
-                    width: 34, height: 34, borderRadius: '50%', background: '#e0e7ff',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 16, marginLeft: 10, flexShrink: 0, alignSelf: 'flex-end',
-                  }}>
+
+                  <div
+                    style={{
+                      width: 34,
+                      height: 34,
+                      borderRadius: '50%',
+                      background: '#e0e7ff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 16,
+                      marginLeft: 10,
+                      flexShrink: 0,
+                      alignSelf: 'flex-end',
+                    }}
+                  >
                     🧑‍💻
                   </div>
                 </div>
               ) : (
                 /* Assistant message */
-                <div style={{ width: '100%' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                <div
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
+                      marginBottom: 10,
+                    }}
+                  >
                     <KaiAvatar mood="happy" size={34} />
+
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: '#312e81' }}>Kai</div>
-                      <div style={{ fontSize: 11, color: '#8b7cf6', fontWeight: 500 }}>AI Cybersecurity Instructor</div>
+                      <div
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 700,
+                          color: '#312e81',
+                        }}
+                      >
+                        Kai
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: 11,
+                          color: '#8b7cf6',
+                          fontWeight: 500,
+                        }}
+                      >
+                        AI Cybersecurity Instructor
+                      </div>
                     </div>
                   </div>
-                  <div style={{
-                    width: '100%', background: '#fff', border: '1.5px solid #ede9fe',
-                    borderRadius: 20, padding: '18px 24px', fontSize: 15, lineHeight: 1.7,
-                    color: '#1e1b4b', boxShadow: '0 2px 8px rgba(124,58,237,0.07)',
-                  }}>
-                    <p style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{msg.content}</p>
+
+                  <div
+                    style={{
+                      width: '100%',
+                      background: '#fff',
+                      border: '1.5px solid #ede9fe',
+                      borderRadius: 20,
+                      padding: '18px 24px',
+                      fontSize: 15,
+                      lineHeight: 1.7,
+                      color: '#1e1b4b',
+                      boxShadow: '0 2px 8px rgba(124,58,237,0.07)',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    <p
+                      style={{
+                        margin: 0,
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                      }}
+                    >
+                      {msg.content}
+                    </p>
                   </div>
                 </div>
               )}
@@ -592,41 +741,120 @@ export default function CommandsChat({
 
           {/* Kai typing bubble */}
           {(phase === 'loading' || phase === 'typing') && (
-            <div style={{ width: '100%', marginBottom: 28, animation: 'cmdFadeSlide 0.3s ease' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <KaiAvatar mood={phase === 'typing' ? 'typing' : 'thinking'} size={34} />
+            <div
+              style={{
+                width: '100%',
+                marginBottom: 28,
+                animation: 'cmdFadeSlide 0.3s ease',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  marginBottom: 10,
+                }}
+              >
+                <KaiAvatar
+                  mood={phase === 'typing' ? 'typing' : 'thinking'}
+                  size={34}
+                />
+
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#312e81' }}>Kai</div>
-                  <div style={{ fontSize: 11, color: '#8b7cf6', fontWeight: 500 }}>AI Cybersecurity Instructor</div>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: '#312e81',
+                    }}
+                  >
+                    Kai
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: '#8b7cf6',
+                      fontWeight: 500,
+                    }}
+                  >
+                    AI Cybersecurity Instructor
+                  </div>
                 </div>
+
                 {phase === 'typing' && (
-                  <span style={{ fontSize: 18, animation: 'cmdHandWave 1.5s ease-in-out infinite', marginLeft: 'auto' }}>✍️</span>
+                  <span
+                    style={{
+                      fontSize: 18,
+                      animation:
+                        'cmdHandWave 1.5s ease-in-out infinite',
+                      marginLeft: 'auto',
+                    }}
+                  >
+                    ✍️
+                  </span>
                 )}
+
                 {phase === 'loading' && (
-                  <span style={{ fontSize: 18, animation: 'cmdThinking 2s ease-in-out infinite', marginLeft: 'auto' }}>💭</span>
+                  <span
+                    style={{
+                      fontSize: 18,
+                      animation:
+                        'cmdThinking 2s ease-in-out infinite',
+                      marginLeft: 'auto',
+                    }}
+                  >
+                    💭
+                  </span>
                 )}
               </div>
 
-              <div style={{
-                background: '#fff', border: '2px solid #ede9fe', borderRadius: 24,
-                padding: '24px 32px',
-                boxShadow: '0 4px 24px rgba(124,58,237,0.10), 0 1px 4px rgba(0,0,0,0.06)',
-                minHeight: 80, width: '100%', position: 'relative', transition: 'all 0.2s ease',
-              }}>
+              <div
+                style={{
+                  background: '#fff',
+                  border: '2px solid #ede9fe',
+                  borderRadius: 24,
+                  padding: '24px 32px',
+                  boxShadow:
+                    '0 4px 24px rgba(124,58,237,0.10), 0 1px 4px rgba(0,0,0,0.06)',
+                  minHeight: 80,
+                  width: '100%',
+                  position: 'relative',
+                  transition: 'all 0.2s ease',
+                  boxSizing: 'border-box',
+                }}
+              >
                 {phase === 'loading' ? (
                   <ThinkingDots />
                 ) : (
-                  <p style={{
-                    fontSize: 16, lineHeight: 1.7, color: '#1e1b4b', margin: 0,
-                    fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 400,
-                    whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-                  }}>
+                  <p
+                    style={{
+                      fontSize: 16,
+                      lineHeight: 1.7,
+                      color: '#1e1b4b',
+                      margin: 0,
+                      fontFamily: "'Inter', system-ui, sans-serif",
+                      fontWeight: 400,
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word',
+                    }}
+                  >
                     {displayed}
-                    <span style={{
-                      display: 'inline-block', width: 2, height: '1.1em', background: '#7c3aed',
-                      marginLeft: 2, verticalAlign: 'text-bottom', borderRadius: 1,
-                      opacity: cursorVisible ? 1 : 0, transition: 'opacity 0.05s',
-                    }} />
+
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        width: 2,
+                        height: '1.1em',
+                        background: '#7c3aed',
+                        marginLeft: 2,
+                        verticalAlign: 'text-bottom',
+                        borderRadius: 1,
+                        opacity: cursorVisible ? 1 : 0,
+                        transition: 'opacity 0.05s',
+                      }}
+                    />
                   </p>
                 )}
               </div>
@@ -635,19 +863,59 @@ export default function CommandsChat({
 
           {/* Send error */}
           {sendError && (
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16,
-              background: '#fff', border: '1.5px solid #fecaca', borderRadius: 14,
-              padding: '12px 18px', animation: 'cmdFadeSlide 0.25s ease',
-              boxShadow: '0 2px 10px rgba(239,68,68,0.08)',
-            }}>
-              <span style={{ fontSize: 18 }}>⚠️</span>
-              <div style={{ flex: 1, fontSize: 14, color: '#7f1d1d', lineHeight: 1.5 }}>
-                <strong style={{ color: '#dc2626' }}>Message failed:</strong> {sendError}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                marginBottom: 16,
+                background: '#fff',
+                border: '1.5px solid #fecaca',
+                borderRadius: 14,
+                padding: '12px 18px',
+                animation: 'cmdFadeSlide 0.25s ease',
+                boxShadow: '0 2px 10px rgba(239,68,68,0.08)',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 18,
+                }}
+              >
+                ⚠️
+              </span>
+
+              <div
+                style={{
+                  flex: 1,
+                  fontSize: 14,
+                  color: '#7f1d1d',
+                  lineHeight: 1.5,
+                }}
+              >
+                <strong
+                  style={{
+                    color: '#dc2626',
+                  }}
+                >
+                  Message failed:
+                </strong>{' '}
+                {sendError}
               </div>
+
               <button
                 onClick={() => setSendError(null)}
-                style={{ background: 'none', border: 'none', color: '#9ca3af', fontSize: 18, cursor: 'pointer', padding: 4, lineHeight: 1 }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#9ca3af',
+                  fontSize: 18,
+                  cursor: 'pointer',
+                  padding: 4,
+                  lineHeight: 1,
+                }}
               >
                 ✕
               </button>
@@ -657,7 +925,6 @@ export default function CommandsChat({
           <div ref={bottomRef} />
         </div>
       </div>
-
       {/* ─────────────────────────────────────
           BOTTOM INPUT
       ───────────────────────────────────── */}
